@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guggenheim 2026 FIFA World Cup Sweepstake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch:#0a4d27;
+    --pitch-deep:#07371c;
+    --chalk:#f5f8f1;
+    --chalk-dim:rgba(245,248,241,.55);
+    --amber:#ffd23f;
+    --tunnel:#0d1410;
+    --line:rgba(245,248,241,.28);
+    --card:#0c5a2e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Archivo',system-ui,sans-serif;
+    background:var(--pitch);
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 8.333%, rgba(0,0,0,.025) 8.333% 16.666%);
+    color:var(--chalk);
+    min-height:100vh;
+  }
+
+  /* ===== Splash gate ===== */
+  #splash{
+    position:fixed; inset:0; z-index:100;
+    height:100dvh;
+    touch-action:none;
+    -webkit-tap-highlight-color:transparent;
+    user-select:none; -webkit-user-select:none;
+    background:#082b17;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% -20%, rgba(255,210,63,.14), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 50% 115%, rgba(11,77,39,.9), transparent 70%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.015) 0 8.333%, rgba(0,0,0,.02) 8.333% 16.666%);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center; padding:1.5rem;
+    overflow:hidden;
+    transition:opacity .6s ease;
+  }
+  #splash.exiting{opacity:0; pointer-events:none}
+  #splash .s-kicker{
+    font-family:'Space Mono',monospace; font-size:.7rem;
+    letter-spacing:.4em; text-transform:uppercase;
+    color:var(--amber); margin-bottom:1rem;
+  }
+  #splash h2{
+    font-family:'Anton',Impact,sans-serif; font-weight:400;
+    font-size:clamp(2.2rem,7.5vw,5rem); line-height:1;
+    text-transform:uppercase; color:var(--chalk);
+    max-width:16ch;
+  }
+  #splash h2 .accent{color:var(--amber)}
+  #splash .s-instruction{
+    margin-top:1.6rem;
+    font-family:'Space Mono',monospace;
+    font-size:clamp(.75rem,2.4vw,.95rem);
+    letter-spacing:.22em; text-transform:uppercase;
+    color:var(--chalk-dim);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:.55} 50%{opacity:1}}
+  #splash .s-miss{
+    position:absolute; bottom:8%; left:0; right:0;
+    font-family:'Anton',Impact,sans-serif;
+    font-size:1.3rem; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--amber); opacity:0; transition:opacity .15s;
+    pointer-events:none;
+  }
+  #splash .s-miss.show{opacity:1}
+  #ball{
+    position:absolute; top:0; left:0;
+    appearance:none; border:none; background:none; cursor:pointer;
+    font-size:3.1rem; line-height:1; padding:.4rem;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,.6));
+    will-change:transform;
+    z-index:101;
+  }
+  #ball:focus-visible{outline:3px solid var(--amber); outline-offset:4px; border-radius:50%}
+  #ball .ball-inner{display:inline-block}
+  @media (prefers-reduced-motion: reduce){
+    #splash .s-instruction{animation:none}
+  }
+  #goal-flash{
+    position:absolute; inset:0; display:none;
+    align-items:center; justify-content:center;
+    background:rgba(13,20,16,.85);
+  }
+  #goal-flash.show{display:flex}
+  #goal-flash span{
+    font-family:'Anton',Impact,sans-serif;
+    font-size:clamp(4rem,18vw,9rem);
+    color:var(--amber); text-transform:uppercase;
+    text-shadow:0 0 40px rgba(255,210,63,.6);
+    animation:goalpop .5s cubic-bezier(.2,1.6,.4,1) both;
+  }
+  @keyframes goalpop{from{transform:scale(.3); opacity:0} to{transform:scale(1); opacity:1}}
+  @media (prefers-reduced-motion: reduce){
+    #goal-flash span{animation:none}
+  }
+
+  body.gate-locked{overflow:hidden}
+  #skip-enter{
+    position:absolute; bottom:4%; left:50%; transform:translateX(-50%);
+    appearance:none; background:none; cursor:pointer;
+    border:1px solid var(--line); border-radius:3px;
+    font-family:'Space Mono',monospace; font-size:.62rem;
+    letter-spacing:.18em; text-transform:uppercase;
+    color:var(--chalk-dim); padding:.55rem .9rem;
+    opacity:0; pointer-events:none; transition:opacity .5s;
+    z-index:102;
+  }
+  #skip-enter.show{opacity:1; pointer-events:auto}
+  #skip-enter:focus-visible{outline:3px solid var(--amber)}
+
+  /* ===== Header: stadium hoarding ===== */
+  header{
+    background:var(--tunnel);
+    border-bottom:6px solid var(--amber);
+    padding:2.2rem 1.5rem 1.6rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 120% at 50% -30%, rgba(255,210,63,.13), transparent 60%);
+    pointer-events:none;
+  }
+  .kicker{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:.55rem;
+  }
+  h1{
+    font-family:'Anton',Impact,sans-serif;
+    font-weight:400;
+    font-size:clamp(2.4rem,8vw,4.6rem);
+    line-height:.95;
+    text-transform:uppercase;
+    letter-spacing:.015em;
+    color:var(--chalk);
+  }
+  h1 .accent{color:var(--amber)}
+  .sub{
+    font-family:'Space Mono',monospace;
+    font-size:.78rem;
+    color:var(--chalk-dim);
+    margin-top:.8rem;
+    letter-spacing:.12em;
+  }
+
+  /* ===== Tabs: fixture board strip ===== */
+  nav{
+    background:var(--pitch-deep);
+    border-bottom:2px solid var(--line);
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    position:sticky; top:0; z-index:20;
+  }
+  .tab{
+    appearance:none; border:none; background:none; cursor:pointer;
+    font-family:'Anton',Impact,sans-serif;
+    font-size:clamp(.85rem,2.6vw,1.05rem);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--chalk-dim);
+    padding:1rem 1.35rem .85rem;
+    border-bottom:5px solid transparent;
+    transition:color .15s, border-color .15s;
+  }
+  .tab:hover{color:var(--chalk)}
+  .tab:focus-visible{outline:3px solid var(--amber); outline-offset:-3px}
+  .tab.active{color:var(--amber); border-bottom-color:var(--amber)}
+  .tab .soon-dot{
+    display:inline-block; width:.45em; height:.45em; border-radius:50%;
+    background:var(--amber); margin-left:.45em; vertical-align:.18em;
+    opacity:.7;
+  }
+
+  main{max-width:1100px; margin:0 auto; padding:2.5rem 1.25rem 4rem}
+  .panel{display:none; animation:rise .35s ease both}
+  .panel.active{display:block}
+  @keyframes rise{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+  @media (prefers-reduced-motion: reduce){
+    .panel{animation:none}
+  }
+
+  /* ===== Section heading: centre-circle motif ===== */
+  .section-head{
+    display:flex; align-items:center; gap:1rem;
+    margin-bottom:1.8rem;
+  }
+  .section-head::before,.section-head::after{
+    content:""; flex:1; height:2px; background:var(--line);
+  }
+  .section-head h2{
+    font-family:'Anton',Impact,sans-serif;
+    font-weight:400;
+    font-size:clamp(1.4rem,4.5vw,2rem);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    white-space:nowrap;
+  }
+
+  /* ===== Rules ===== */
+  .rules-card{
+    border:2px solid var(--line);
+    border-radius:4px;
+    padding:2rem 1.75rem;
+    background:rgba(0,0,0,.14);
+    max-width:760px; margin:0 auto;
+  }
+  .rules-card p{line-height:1.65; color:var(--chalk); margin-bottom:1rem; font-size:1rem}
+  .rules-card p:last-child{margin-bottom:0}
+  .rules-empty{
+    text-align:center; padding:3.5rem 1.5rem;
+  }
+  .whistle{font-size:2.6rem; display:block; margin-bottom:1rem}
+  .rules-empty h3{
+    font-family:'Anton',Impact,sans-serif; font-weight:400;
+    text-transform:uppercase; letter-spacing:.06em;
+    font-size:1.3rem; margin-bottom:.6rem;
+  }
+  .rules-empty p{color:var(--chalk-dim); max-width:42ch; margin:0 auto; line-height:1.6}
+
+  /* ===== Teams grid: team-sheet cards ===== */
+  .legend{
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:.72rem; letter-spacing:.1em;
+    color:var(--chalk-dim);
+    margin:-0.8rem 0 1.8rem;
+  }
+  .groups{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(245px,1fr));
+    gap:1.1rem;
+  }
+  .group{
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:4px;
+    overflow:hidden;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .group:hover{transform:translateY(-3px); border-color:var(--amber)}
+  .group-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    background:var(--tunnel);
+    padding:.65rem .9rem .55rem;
+    border-bottom:3px solid var(--amber);
+  }
+  .group-head .g-label{
+    font-family:'Anton',Impact,sans-serif;
+    text-transform:uppercase; letter-spacing:.08em;
+    font-size:1.05rem; color:var(--chalk);
+  }
+  .group-head .g-letter{
+    font-family:'Anton',Impact,sans-serif;
+    font-size:1.5rem; color:var(--amber); line-height:1;
+  }
+  .group ol{list-style:none}
+  .group li{
+    display:flex; align-items:center; gap:.65rem;
+    padding:.62rem .9rem;
+    font-weight:600; font-size:.95rem;
+    border-bottom:1px dashed rgba(245,248,241,.18);
+  }
+  .group li:last-child{border-bottom:none}
+  .group li .flag{font-size:1.25rem; line-height:1}
+  .group li .num{
+    font-family:'Space Mono',monospace;
+    font-size:.7rem; color:var(--chalk-dim); width:1.1em;
+  }
+  .host-tag{
+    margin-left:auto;
+    font-family:'Space Mono',monospace;
+    font-size:.58rem; letter-spacing:.12em;
+    color:var(--tunnel);
+    background:var(--amber);
+    padding:.15rem .4rem; border-radius:2px;
+    text-transform:uppercase; font-weight:700;
+  }
+
+  /* ===== Coming soon: dot-matrix scoreboard ===== */
+  .scoreboard{
+    max-width:640px; margin:1rem auto 0;
+    background:var(--tunnel);
+    border:3px solid #1d2a20;
+    border-radius:6px;
+    padding:3rem 1.5rem;
+    text-align:center;
+    box-shadow:inset 0 0 60px rgba(0,0,0,.6);
+  }
+  .led{
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:clamp(1.5rem,6vw,2.6rem);
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--amber);
+    text-shadow:0 0 14px rgba(255,210,63,.55);
+    animation:flicker 2.4s steps(2) infinite;
+  }
+  @media (prefers-reduced-motion: reduce){.led{animation:none}}
+  @keyframes flicker{0%,92%{opacity:1} 93%,100%{opacity:.65}}
+  .scoreboard .small{
+    display:block; margin-top:1rem;
+    font-family:'Space Mono',monospace;
+    font-size:.75rem; letter-spacing:.18em;
+    color:var(--chalk-dim); text-transform:uppercase;
+  }
+
+  /* ===== Clickable teams ===== */
+  .group li{cursor:pointer; transition:background .12s}
+  .group li:hover{background:rgba(255,210,63,.12)}
+  .group li:focus-visible{outline:3px solid var(--amber); outline-offset:-3px}
+  .group li::after{
+    content:"›";
+    margin-left:auto;
+    color:var(--chalk-dim);
+    font-weight:700;
+  }
+  .group li:has(.host-tag)::after{margin-left:.5rem}
+
+  /* ===== Team profile modal ===== */
+  .overlay{
+    position:fixed; inset:0; z-index:50;
+    background:rgba(5,20,10,.78);
+    backdrop-filter:blur(3px);
+    display:none;
+    align-items:center; justify-content:center;
+    padding:1.25rem;
+  }
+  .overlay.open{display:flex; animation:fade .2s ease}
+  @keyframes fade{from{opacity:0} to{opacity:1}}
+  .profile{
+    background:var(--card);
+    border:2px solid var(--amber);
+    border-radius:6px;
+    max-width:480px; width:100%;
+    max-height:85vh; overflow-y:auto;
+    box-shadow:0 24px 60px rgba(0,0,0,.55);
+  }
+  .profile-head{
+    background:var(--tunnel);
+    padding:1.4rem 1.4rem 1.1rem;
+    border-bottom:4px solid var(--amber);
+    display:flex; align-items:center; gap:1rem;
+    position:relative;
+  }
+  .profile-head .big-flag{font-size:3rem; line-height:1}
+  .profile-head h3{
+    font-family:'Anton',Impact,sans-serif; font-weight:400;
+    font-size:1.7rem; text-transform:uppercase; letter-spacing:.04em;
+    line-height:1.05;
+  }
+  .profile-head .p-group{
+    font-family:'Space Mono',monospace;
+    font-size:.7rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--amber); display:block; margin-top:.3rem;
+  }
+  .close-btn{
+    position:absolute; top:.7rem; right:.7rem;
+    appearance:none; border:2px solid var(--line); background:none;
+    color:var(--chalk); font-size:1rem; font-weight:700;
+    width:2rem; height:2rem; border-radius:50%; cursor:pointer;
+    line-height:1;
+  }
+  .close-btn:hover{border-color:var(--amber); color:var(--amber)}
+  .close-btn:focus-visible{outline:3px solid var(--amber)}
+  .profile-body{padding:1.3rem 1.4rem 1.5rem}
+  .profile-body p{line-height:1.6; font-size:.95rem; margin-bottom:1.2rem}
+  .stats{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem;
+  }
+  .stat{
+    background:rgba(0,0,0,.22);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:.7rem .55rem .6rem;
+    text-align:center;
+  }
+  .stat .val{
+    font-family:'Anton',Impact,sans-serif;
+    font-size:1.35rem; color:var(--amber); line-height:1.1;
+    display:block;
+  }
+  .stat .lbl{
+    font-family:'Space Mono',monospace;
+    font-size:.56rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--chalk-dim); display:block; margin-top:.35rem; line-height:1.4;
+  }
+  .stats-note{
+    font-family:'Space Mono',monospace;
+    font-size:.6rem; letter-spacing:.08em;
+    color:var(--chalk-dim);
+    text-align:center; margin-top:.8rem;
+  }
+
+  /* ===== How to enter steps ===== */
+  .rule-block.step{display:flex; gap:1rem; align-items:flex-start}
+  .step-num{
+    flex-shrink:0;
+    font-family:'Anton',Impact,sans-serif;
+    font-size:1.4rem; color:var(--tunnel);
+    background:var(--amber);
+    width:2.4rem; height:2.4rem; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    margin-top:.1rem;
+  }
+  .bank-box{
+    margin-top:.8rem;
+    border:2px dashed var(--amber);
+    border-radius:4px;
+    background:rgba(0,0,0,.22);
+    padding:.9rem 1rem;
+    display:grid; gap:.5rem;
+  }
+  .bank-box div{
+    display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+    flex-wrap:wrap;
+    font-size:.92rem;
+  }
+  .bank-box span{
+    font-family:'Space Mono',monospace; font-size:.62rem;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--chalk-dim);
+  }
+  .bank-box strong{font-family:'Space Mono',monospace; font-size:.92rem; color:var(--amber)}
+
+  /* ===== Rules content ===== */
+  .rule-block{margin-bottom:1.6rem}
+  .rule-block h4{
+    font-family:'Anton',Impact,sans-serif; font-weight:400;
+    text-transform:uppercase; letter-spacing:.07em;
+    font-size:1.05rem; color:var(--amber); margin-bottom:.55rem;
+  }
+  .rule-block p, .rule-block li{line-height:1.65; font-size:.95rem}
+  .rule-block ul{list-style:none; margin-top:.3rem}
+  .rule-block ul li{
+    padding:.3rem 0 .3rem 1.3rem; position:relative;
+  }
+  .rule-block ul li::before{
+    content:"●"; position:absolute; left:.15rem; top:.42rem;
+    color:var(--amber); font-size:.55rem;
+  }
+  table.points{
+    width:100%; border-collapse:collapse; margin-top:.6rem;
+    font-size:.9rem;
+  }
+  table.points th{
+    font-family:'Space Mono',monospace; font-size:.62rem;
+    letter-spacing:.14em; text-transform:uppercase;
+    color:var(--chalk-dim); text-align:left;
+    padding:.4rem .6rem; border-bottom:2px solid var(--line);
+  }
+  table.points td{
+    padding:.5rem .6rem; border-bottom:1px dashed rgba(245,248,241,.18);
+  }
+  table.points td.pts{
+    font-family:'Anton',Impact,sans-serif; color:var(--amber);
+    font-size:1.05rem; text-align:right; white-space:nowrap;
+  }
+  .max-note{
+    font-family:'Space Mono',monospace; font-size:.65rem;
+    letter-spacing:.08em; color:var(--chalk-dim); margin-top:.7rem;
+  }
+
+  /* ===== Allocation board ===== */
+  .draft-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:1rem; margin-top:1.4rem;
+  }
+  .squad{
+    background:var(--card); border:2px solid var(--line); border-radius:4px;
+    overflow:hidden;
+  }
+  .squad-head{
+    background:var(--tunnel); padding:.6rem .85rem .5rem;
+    border-bottom:3px solid var(--amber);
+    display:flex; justify-content:space-between; align-items:baseline;
+  }
+  .squad-head .s-name{
+    font-family:'Anton',Impact,sans-serif; font-size:.95rem;
+    text-transform:uppercase; letter-spacing:.06em;
+  }
+  .squad-head .s-seed{
+    font-family:'Space Mono',monospace; font-size:.62rem;
+    letter-spacing:.12em; color:var(--amber);
+  }
+  .squad ul{list-style:none}
+  .squad ul li{
+    display:flex; align-items:center; gap:.55rem;
+    padding:.5rem .85rem; font-size:.88rem; font-weight:600;
+    border-bottom:1px dashed rgba(245,248,241,.18);
+  }
+  .squad ul li:last-child{border-bottom:none}
+  .squad ul li.empty{color:var(--chalk-dim); font-weight:400; font-style:italic}
+  .squad ul li .pick-no{
+    font-family:'Space Mono',monospace; font-size:.6rem;
+    color:var(--chalk-dim); width:2.2em; flex-shrink:0;
+  }
+
+  /* ===== Leaderboard ===== */
+  .board{
+    border:2px solid var(--line); border-radius:4px; overflow:hidden;
+    background:var(--card); max-width:780px; margin:1.4rem auto 0;
+  }
+  .board-row{
+    display:grid; grid-template-columns:3.2rem 1fr 5.2rem;
+    align-items:center;
+    padding:.85rem 1rem;
+    border-bottom:1px dashed rgba(245,248,241,.18);
+  }
+  .board-row:last-child{border-bottom:none}
+  .board-row.head{
+    background:var(--tunnel);
+    font-family:'Space Mono',monospace; font-size:.62rem;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--chalk-dim);
+    border-bottom:2px solid var(--amber);
+  }
+  .board-row .pos{
+    font-family:'Anton',Impact,sans-serif; font-size:1.3rem; color:var(--amber);
+  }
+  .board-row .pair{font-weight:700; font-size:1rem}
+  .board-row .pair .teams-mini{
+    display:block; font-weight:400; font-size:.78rem;
+    color:var(--chalk-dim); margin-top:.15rem;
+  }
+  .board-row .total{
+    font-family:'Anton',Impact,sans-serif; font-size:1.5rem;
+    text-align:right;
+  }
+  .updated-note{
+    text-align:center;
+    font-family:'Space Mono',monospace; font-size:.65rem;
+    letter-spacing:.1em; color:var(--chalk-dim); margin-top:1rem;
+  }
+
+  footer{
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:.7rem; letter-spacing:.14em;
+    color:var(--chalk-dim);
+    padding:1.5rem 1rem 2.5rem;
+    border-top:2px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<noscript>
+  <style>
+    #splash{display:none !important}
+    body.gate-locked, body{overflow:auto !important}
+    .panel{display:block !important; margin-bottom:3rem}
+    #allocation-content::after, #score-content::after{
+      content:"This section is interactive — open this file in Safari or Chrome (or visit the hosted site) to see it.";
+      display:block; text-align:center; color:rgba(245,248,241,.55);
+      font-family:'Space Mono',monospace; font-size:.75rem; letter-spacing:.1em;
+      padding:2rem 1rem;
+    }
+  </style>
+</noscript>
+
+<div id="splash" aria-label="Welcome screen">
+  <div class="s-kicker">USA · Canada · Mexico · Summer 2026</div>
+  <h2>Welcome to the <span class="accent">Guggenheim 2026</span> FIFA World Cup Sweepstake</h2>
+  <div class="s-instruction">Catch the ball to enter</div>
+  <div class="s-miss" id="miss-msg"></div>
+  <button id="ball" aria-label="Click the bouncing football to enter the site"><span class="ball-inner">⚽</span></button>
+  <button id="skip-enter">Can't catch it? Walk through the tunnel →</button>
+  <div id="goal-flash" aria-hidden="true"><span>Goal!</span></div>
+</div>
+
+<script>
+(function(){
+  const splash = document.getElementById('splash');
+  const ball = document.getElementById('ball');
+  const inner = ball.querySelector('.ball-inner');
+  const missMsg = document.getElementById('miss-msg');
+  const skipBtn = document.getElementById('skip-enter');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MISSES = ["Swing and a miss!","Just wide!","Off the post!","The keeper's beaten… but so are you!","Row Z!","VAR says: no contact!"];
+  let missTimer = null, missCount = 0;
+
+  document.body.classList.add('gate-locked');
+
+  // viewport: visualViewport tracks the *visible* area on mobile (address bar etc.)
+  function vp(){
+    const v = window.visualViewport;
+    return v ? {W:v.width, H:v.height} : {W:window.innerWidth, H:window.innerHeight};
+  }
+  // smaller screens get a proportionally slower ball so it feels the same as desktop
+  const speedScale = Math.max(0.55, Math.min(1, vp().W / 900));
+  let x = 40, y = 70, vx = 4.8*speedScale, vy = 3.9*speedScale, rot = 0, raf = null, entered = false;
+
+  function ballSize(){ const r = ball.getBoundingClientRect(); return {w:r.width||64, h:r.height||64}; }
+
+  function step(){
+    const {w,h} = ballSize();
+    const {W,H} = vp();
+    x += vx; y += vy; rot += Math.hypot(vx,vy) * 1.4;
+    if(x <= 0){ x = 0; vx = Math.abs(vx); }
+    if(x + w >= W){ x = Math.max(0, W - w); vx = -Math.abs(vx); }
+    if(y <= 0){ y = 0; vy = Math.abs(vy); }
+    if(y + h >= H){ y = Math.max(0, H - h); vy = -Math.abs(vy); }
+    ball.style.transform = 'translate('+x+'px,'+y+'px)';
+    inner.style.transform = 'rotate('+rot+'deg)';
+    raf = requestAnimationFrame(step);
+  }
+
+  if(reduceMotion){
+    // Static, centred, gently catchable
+    ball.style.position = 'relative';
+    ball.style.marginTop = '1.5rem';
+  } else {
+    raf = requestAnimationFrame(step);
+  }
+
+  // Generous catching: pointerdown (fires instantly, no press+release on a moving
+  // target) anywhere near the ball counts. Touch gets an even fatter radius.
+  splash.addEventListener('pointerdown', e => {
+    if(entered) return;
+    e.preventDefault();
+    const radius = (e.pointerType === 'touch') ? 120 : 90;
+    const r = ball.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width/2);
+    const dy = e.clientY - (r.top + r.height/2);
+    if(Math.hypot(dx,dy) <= radius){ enter(); return; }
+    if(skipBtn.contains(e.target)) return; // let the fallback button handle itself
+    missCount++;
+    missMsg.textContent = MISSES[(missCount-1) % MISSES.length];
+    missMsg.classList.add('show');
+    clearTimeout(missTimer);
+    missTimer = setTimeout(()=>missMsg.classList.remove('show'), 1100);
+    if(!reduceMotion && missCount <= 6){ vx *= 1.12; vy *= 1.12; }
+  }, {passive:false});
+
+  // After 8s (or 4 misses), offer a dignified way in
+  let skipShown = false;
+  function showSkip(){ if(!skipShown && !entered){ skipShown = true; skipBtn.classList.add('show'); } }
+  setTimeout(showSkip, 8000);
+  splash.addEventListener('pointerdown', () => { if(missCount >= 4) showSkip(); });
+  skipBtn.addEventListener('click', enter);
+  skipBtn.addEventListener('pointerdown', e => { e.stopPropagation(); });
+
+  function enter(){
+    if(entered) return;
+    entered = true;
+    if(raf) cancelAnimationFrame(raf);
+    const flash = document.getElementById('goal-flash');
+    flash.classList.add('show');
+    setTimeout(()=>{
+      splash.classList.add('exiting');
+      document.body.classList.remove('gate-locked');
+      setTimeout(()=>splash.remove(), 650);
+    }, reduceMotion ? 300 : 850);
+  }
+  ball.addEventListener('click', enter);
+})();
+</script>
+
+<header>
+  <div class="kicker">FIFA World Cup 26 · USA / Canada / Mexico</div>
+  <h1>Guggenheim 2026<br><span class="accent">World Cup Sweepstake</span></h1>
+  <div class="sub">11 June – 19 July 2026 · 48 teams · One winner</div>
+</header>
+
+<nav role="tablist" aria-label="Sweepstake sections">
+  <button class="tab active" role="tab" aria-selected="true" data-panel="howto">How to Enter</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="rules">Rules</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="teams">Team List</button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="allocation">Allocation<span class="soon-dot" aria-hidden="true"></span></button>
+  <button class="tab" role="tab" aria-selected="false" data-panel="score">Score<span class="soon-dot" aria-hidden="true"></span></button>
+</nav>
+
+<main>
+
+  <!-- HOW TO ENTER -->
+  <section id="howto" class="panel active" role="tabpanel">
+    <div class="section-head"><h2>How to Enter</h2></div>
+    <div class="rules-card">
+
+      <div class="rule-block step">
+        <div class="step-num">1</div>
+        <div>
+          <h4>Declare Your Entry</h4>
+          <p>Email <strong>fraser.casbolt@guggenheimpartners.com</strong> to confirm you're in. No email, no entry — the referee's decision is final.</p>
+        </div>
+      </div>
+
+      <div class="rule-block step">
+        <div class="step-num">2</div>
+        <div>
+          <h4>The Draw</h4>
+          <p>Teams will be allocated and draft rankings drawn <strong>this Thursday, 11 June at 3:00 PM</strong> — just before the opening match kicks off at the Azteca. Then the snake draft begins.</p>
+        </div>
+      </div>
+
+      <div class="rule-block step">
+        <div class="step-num">3</div>
+        <div>
+          <h4>Pay the Entry Fee</h4>
+          <p>Once teams are allocated, send <strong>£20</strong> to the account below. All entry fees contribute to the prize pot — every penny goes back out to the winners.</p>
+          <div class="bank-box">
+            <div><span>Account name</span><strong>Fraser Casbolt</strong></div>
+            <div><span>Sort code</span><strong>40-35-34</strong></div>
+            <div><span>Account number</span><strong>14151550</strong></div>
+            <div><span>Reference</span><strong>WC26 + your surname</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section id="rules" class="panel" role="tabpanel">
+    <div class="section-head"><h2>Rules of the Game</h2></div>
+    <div class="rules-card">
+
+      <div class="rule-block">
+        <h4>1 · The Teams</h4>
+        <p>The sweepstake runs with <strong>eight company teams</strong>, targeting two people per team based on an expected sign-up of sixteen. If demand is higher or lower, team sizes may be adjusted — but it'll be eight teams either way. You and your teammates share one squad, one score, and one destiny.</p>
+      </div>
+
+      <div class="rule-block">
+        <h4>2 · The Snake Draft</h4>
+        <ul>
+          <li>The eight company teams are ranked 1–8 to set the draft order.</li>
+          <li>Round one runs in order: seed 1 picks first, then 2, 3 … down to seed 8.</li>
+          <li>The order then <strong>snakes</strong>: seed 8 also opens round two, going back up to seed 1 — and so on, alternating direction each round.</li>
+          <li>Six rounds in total. 8 company teams × 6 picks = all 48 nations owned. No leftovers, no excuses.</li>
+        </ul>
+      </div>
+
+      <div class="rule-block">
+        <h4>3 · Scoring</h4>
+        <p>Your six nations earn points for every result and every round they survive. Points are cumulative — a champion banks the whole ladder on the way up.</p>
+        <table class="points">
+          <tr><th>Achievement</th><th style="text-align:right">Points</th></tr>
+          <tr><td>Group-stage win</td><td class="pts">2</td></tr>
+          <tr><td>Reach the Round of 32</td><td class="pts">+4</td></tr>
+          <tr><td>Reach the Round of 16</td><td class="pts">+6</td></tr>
+          <tr><td>Reach the Quarter-finals</td><td class="pts">+8</td></tr>
+          <tr><td>Reach the Semi-finals</td><td class="pts">+10</td></tr>
+          <tr><td>Finish fourth</td><td class="pts">+3</td></tr>
+          <tr><td>Finish third</td><td class="pts">+6</td></tr>
+          <tr><td>Runner-up</td><td class="pts">+12</td></tr>
+          <tr><td>World Champions</td><td class="pts">+20</td></tr>
+        </table>
+        <p class="max-note">Max haul per nation: 6 group pts + 4 + 6 + 8 + 10 + 20 = 54. Draws earn nothing — win or bust. Knockout games settled in extra time / on penalties count as wins for progression.</p>
+      </div>
+
+      <div class="rule-block">
+        <h4>4 · The Verdict</h4>
+        <p>Highest combined total across your six nations after the final on 19 July wins. Tie-break: most nations in the knockout rounds, then most group-stage goals scored, then a coin flip overseen by the most neutral person in the office.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TEAMS -->
+  <section id="teams" class="panel" role="tabpanel">
+    <div class="section-head"><h2>The 48 · By Group</h2></div>
+    <p class="legend">Tap any team for form, history and ranking · Top two from each group advance, plus the eight best third-placed teams</p>
+    <div class="groups">
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">A</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇲🇽</span>Mexico<span class="host-tag">Host</span></li>
+          <li><span class="num">2</span><span class="flag">🇿🇦</span>South Africa</li>
+          <li><span class="num">3</span><span class="flag">🇰🇷</span>South Korea</li>
+          <li><span class="num">4</span><span class="flag">🇨🇿</span>Czechia</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">B</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇨🇦</span>Canada<span class="host-tag">Host</span></li>
+          <li><span class="num">2</span><span class="flag">🇧🇦</span>Bosnia &amp; Herzegovina</li>
+          <li><span class="num">3</span><span class="flag">🇶🇦</span>Qatar</li>
+          <li><span class="num">4</span><span class="flag">🇨🇭</span>Switzerland</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">C</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇧🇷</span>Brazil</li>
+          <li><span class="num">2</span><span class="flag">🇲🇦</span>Morocco</li>
+          <li><span class="num">3</span><span class="flag">🇭🇹</span>Haiti</li>
+          <li><span class="num">4</span><span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>Scotland</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">D</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇺🇸</span>United States<span class="host-tag">Host</span></li>
+          <li><span class="num">2</span><span class="flag">🇵🇾</span>Paraguay</li>
+          <li><span class="num">3</span><span class="flag">🇦🇺</span>Australia</li>
+          <li><span class="num">4</span><span class="flag">🇹🇷</span>Türkiye</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">E</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇩🇪</span>Germany</li>
+          <li><span class="num">2</span><span class="flag">🇨🇼</span>Curaçao</li>
+          <li><span class="num">3</span><span class="flag">🇨🇮</span>Côte d'Ivoire</li>
+          <li><span class="num">4</span><span class="flag">🇪🇨</span>Ecuador</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">F</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇳🇱</span>Netherlands</li>
+          <li><span class="num">2</span><span class="flag">🇯🇵</span>Japan</li>
+          <li><span class="num">3</span><span class="flag">🇸🇪</span>Sweden</li>
+          <li><span class="num">4</span><span class="flag">🇹🇳</span>Tunisia</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">G</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇧🇪</span>Belgium</li>
+          <li><span class="num">2</span><span class="flag">🇪🇬</span>Egypt</li>
+          <li><span class="num">3</span><span class="flag">🇮🇷</span>Iran</li>
+          <li><span class="num">4</span><span class="flag">🇳🇿</span>New Zealand</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">H</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇪🇸</span>Spain</li>
+          <li><span class="num">2</span><span class="flag">🇨🇻</span>Cape Verde</li>
+          <li><span class="num">3</span><span class="flag">🇸🇦</span>Saudi Arabia</li>
+          <li><span class="num">4</span><span class="flag">🇺🇾</span>Uruguay</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">I</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇫🇷</span>France</li>
+          <li><span class="num">2</span><span class="flag">🇸🇳</span>Senegal</li>
+          <li><span class="num">3</span><span class="flag">🇮🇶</span>Iraq</li>
+          <li><span class="num">4</span><span class="flag">🇳🇴</span>Norway</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">J</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇦🇷</span>Argentina</li>
+          <li><span class="num">2</span><span class="flag">🇩🇿</span>Algeria</li>
+          <li><span class="num">3</span><span class="flag">🇦🇹</span>Austria</li>
+          <li><span class="num">4</span><span class="flag">🇯🇴</span>Jordan</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">K</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🇵🇹</span>Portugal</li>
+          <li><span class="num">2</span><span class="flag">🇨🇩</span>DR Congo</li>
+          <li><span class="num">3</span><span class="flag">🇺🇿</span>Uzbekistan</li>
+          <li><span class="num">4</span><span class="flag">🇨🇴</span>Colombia</li>
+        </ol>
+      </div>
+
+      <div class="group">
+        <div class="group-head"><span class="g-label">Group</span><span class="g-letter">L</span></div>
+        <ol>
+          <li><span class="num">1</span><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>England</li>
+          <li><span class="num">2</span><span class="flag">🇭🇷</span>Croatia</li>
+          <li><span class="num">3</span><span class="flag">🇬🇭</span>Ghana</li>
+          <li><span class="num">4</span><span class="flag">🇵🇦</span>Panama</li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ALLOCATION -->
+  <section id="allocation" class="panel" role="tabpanel">
+    <div class="section-head"><h2>Sweepstake Allocation</h2></div>
+    <div id="allocation-content"></div>
+  </section>
+
+  <!-- SCORE -->
+  <section id="score" class="panel" role="tabpanel">
+    <div class="section-head"><h2>Leaderboard</h2></div>
+    <div id="score-content"></div>
+  </section>
+
+</main>
+
+<footer>World Cup 2026 · 12 groups · 104 matches · Final at MetLife Stadium, 19 July</footer>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="p-name">
+  <div class="profile">
+    <div class="profile-head">
+      <span class="big-flag" id="p-flag"></span>
+      <div>
+        <h3 id="p-name"></h3>
+        <span class="p-group" id="p-group"></span>
+      </div>
+      <button class="close-btn" id="close-btn" aria-label="Close profile">✕</button>
+    </div>
+    <div class="profile-body">
+      <p id="p-overview"></p>
+      <div class="stats">
+        <div class="stat"><span class="val" id="p-rank"></span><span class="lbl">FIFA ranking</span></div>
+        <div class="stat"><span class="val" id="p-apps"></span><span class="lbl">World Cups (incl. 2026)</span></div>
+        <div class="stat"><span class="val" id="p-best"></span><span class="lbl" id="p-best-lbl">Best finish</span></div>
+      </div>
+      <p class="stats-note">FIFA ranking as of April 2026 (final pre-tournament update)</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected','true');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  /* ===== Team data ===== */
+  const TEAMS = {
+    "Mexico":{rank:15,apps:18,best:"Quarter-finals",bestWC:"1970 & 1986",overview:"Hosting for a record third time, El Tri open the whole tournament at the Azteca with one mission: finally win the elusive 'quinto partido' and reach a quarter-final for the first time since 1986. Home support and a kind group make this their best chance in a generation."},
+    "South Africa":{rank:60,apps:4,best:"Group stage",bestWC:"1998, 2002 & 2010",overview:"Bafana Bafana are back at the World Cup for the first time since hosting in 2010, having topped their qualifying group. A young, settled side with momentum, they get the honour of facing Mexico in the opening match."},
+    "South Korea":{rank:25,apps:12,best:"Fourth place",bestWC:"2002",overview:"An eleventh consecutive World Cup for Asia's most reliable qualifiers, and almost certainly the last for captain Son Heung-min. The 2002 semi-finalists have the attacking quality to escape a winnable Group A."},
+    "Czechia":{rank:41,apps:2,best:"Group stage",bestWC:"2006",overview:"Battled through the play-offs to reach a first World Cup as an independent nation since 2006 — though as Czechoslovakia they were twice runners-up (1934, 1962). Patrik Schick leads a side that thrives as the underdog."},
+    "Canada":{rank:30,apps:3,best:"Group stage",bestWC:"1986 & 2022",overview:"Co-hosts riding a genuine golden generation, with Alphonso Davies and Jonathan David headlining easily the strongest squad in their history. Opening at home in Toronto, they target a first-ever World Cup knockout appearance."},
+    "Bosnia & Herzegovina":{rank:65,apps:2,best:"Group stage",bestWC:"2014",overview:"Back on the biggest stage for the first time since their 2014 debut after surviving the play-offs. A proud footballing nation with nothing to lose — and a knack for making big sides uncomfortable."},
+    "Qatar":{rank:55,apps:2,best:"Group stage",bestWC:"2022",overview:"After a chastening home tournament in 2022, the 2019 and 2023 Asian champions qualified on merit this time. They'll be desperate to register a first-ever World Cup point — or three."},
+    "Switzerland":{rank:19,apps:13,best:"Quarter-finals",bestWC:"1934, 1938 & 1954",overview:"The quietly relentless Swiss have reached the knockouts at three of the last four World Cups and beat both France and Spain in recent tournament football. Perennially underrated, never an easy out."},
+    "Brazil":{rank:6,apps:23,best:"Champions ×5",bestWC:"1958–2002",overview:"The only nation to play in all 23 World Cups, now under Carlo Ancelotti — their first foreign coach at a finals. Five titles, 24 years of hurt since the last one, and a squad rebuilt around Vinícius Júnior to end it."},
+    "Morocco":{rank:8,apps:7,best:"Fourth place",bestWC:"2022",overview:"The 2022 semi-finalists are now the highest-ranked African side in history at No. 8 in the world. With elite full-backs, a fortress defence and fresh AFCON success at home, the Atlas Lions are nobody's idea of an outsider anymore."},
+    "Haiti":{rank:83,apps:2,best:"Group stage",bestWC:"1974",overview:"The fairytale of qualifying: Haiti reached a first World Cup since 1974 despite playing every 'home' game abroad due to the crisis at home. Pure romance — and a popular pick for neutral hearts in the sweepstake."},
+    "Scotland":{rank:43,apps:9,best:"Group stage",bestWC:"never past round one",overview:"A 28-year wait ends after one of the most dramatic qualifying finales in memory. The Tartan Army's eternal quest: in nine appearances, Scotland have never survived the group stage. Surely this time?"},
+    "United States":{rank:16,apps:12,best:"Third place",bestWC:"1930",overview:"Mauricio Pochettino's hosts carry the weight of a home World Cup and a golden generation finally come of age — Pulisic, McKennie, Balogun and friends. Anything short of a deep run will be a disappointment."},
+    "Paraguay":{rank:40,apps:9,best:"Quarter-finals",bestWC:"2010",overview:"Back for the first time since their 2010 quarter-final run, La Albirroja ended a 16-year drought on the back of a famously stubborn defence. Classic tournament awkward customers."},
+    "Australia":{rank:27,apps:7,best:"Round of 16",bestWC:"2006 & 2022",overview:"A sixth consecutive World Cup for the Socceroos, who pushed eventual champions Argentina hard in the 2022 round of 16. Organised, athletic and battle-hardened by the world's longest qualifying road."},
+    "Türkiye":{rank:22,apps:3,best:"Third place",bestWC:"2002",overview:"The last team to book their ticket, beating Kosovo in the play-off final. Türkiye have only been to two World Cups before — and finished third at one of them. With Arda Güler conducting, this golden generation is dangerous."},
+    "Germany":{rank:10,apps:21,best:"Champions ×4",bestWC:"1954–2014",overview:"Four titles, but group-stage exits in 2018 and 2022 still sting. Julian Nagelsmann's rebuilt side arrives with a point to prove and the pedigree to go all the way — write off Germany at your peril."},
+    "Curaçao":{rank:82,apps:1,best:"Debut",bestWC:"—",overview:"The smallest nation ever to qualify for a World Cup — an island of around 150,000 people. Whoever draws Curaçao gets the tournament's great romantic story, masterminded by veteran coach Dick Advocaat."},
+    "Côte d'Ivoire":{rank:34,apps:4,best:"Group stage",bestWC:"2006, 2010 & 2014",overview:"The reigning back-to-back AFCON contenders return to the World Cup for the first time since 2014. The Elephants' golden generation never escaped the group — this deeper, younger squad believes it can."},
+    "Ecuador":{rank:23,apps:5,best:"Round of 16",bestWC:"2006",overview:"Arguably South America's most improved side, built on a miserly defence and Moisés Caicedo's midfield engine. They conceded barely anything in CONMEBOL qualifying and will fancy their chances in Group E."},
+    "Netherlands":{rank:7,apps:12,best:"Runners-up ×3",bestWC:"1974, 1978 & 2010",overview:"Three finals, zero titles — football's most decorated nearly-men. Ronald Koeman's deep, balanced squad makes the Oranje a fashionable dark horse to finally land the big one."},
+    "Japan":{rank:18,apps:8,best:"Round of 16",bestWC:"4 times",overview:"The first team to qualify and the highest-ranked Asian side ever heading into a World Cup. Having beaten Germany and Spain in 2022, the Samurai Blue now openly talk about reaching the latter stages — and nobody is laughing."},
+    "Sweden":{rank:38,apps:13,best:"Runners-up",bestWC:"1958",overview:"A turbulent qualifying campaign ended with play-off redemption, and the prize is a strike pairing few defences want to see: Alexander Isak and Viktor Gyökeres. Chaos potential, in both directions."},
+    "Tunisia":{rank:44,apps:7,best:"Group stage",bestWC:"never past round one",overview:"Qualified with games to spare, the Carthage Eagles are well-drilled and famously hard to beat — they took down France in 2022. A first-ever knockout appearance is the target in seven attempts."},
+    "Belgium":{rank:9,apps:15,best:"Third place",bestWC:"2018",overview:"The golden generation has given way to a quicker, hungrier wave led by Jérémy Doku and Charles De Ketelaere. Still ranked in the world's top ten, Belgium are a kind group away from another deep run."},
+    "Egypt":{rank:29,apps:4,best:"Group stage",bestWC:"never past round one",overview:"Mohamed Salah finally gets the World Cup stage his career deserves, in what is surely his last. The Pharaohs have never won a World Cup knockout match — Salah's farewell tour aims to change that."},
+    "Iran":{rank:21,apps:7,best:"Group stage",bestWC:"never past round one",overview:"A fourth consecutive World Cup for Asia's perennial heavyweights, who have still never escaped the group in six previous tries. Mehdi Taremi leads a side that always makes life miserable for favourites."},
+    "New Zealand":{rank:85,apps:3,best:"Group stage",bestWC:"2010 (unbeaten)",overview:"The lowest-ranked team in the tournament, but remember 2010: the All Whites went home unbeaten while Italy went home bottom. Chris Wood leads the line for the OFC's first guaranteed qualifiers."},
+    "Spain":{rank:2,apps:17,best:"Champions",bestWC:"2010",overview:"Reigning European champions and many people's outright favourites, with Lamine Yamal and Pedri orchestrating the best midfield in world football. The team everyone wants to pull out of the hat."},
+    "Cape Verde":{rank:69,apps:1,best:"Debut",bestWC:"—",overview:"Debutants and one of the smallest nations ever to reach a World Cup, the Blue Sharks stunned Africa by winning their qualifying group outright. A diaspora-powered squad with absolutely nothing to fear."},
+    "Saudi Arabia":{rank:61,apps:7,best:"Round of 16",bestWC:"1994",overview:"Authors of the greatest World Cup shock in recent memory — beating eventual champions Argentina in 2022. The Green Falcons return with home-based stars sharpened by the Saudi Pro League era."},
+    "Uruguay":{rank:17,apps:15,best:"Champions ×2",bestWC:"1930 & 1950",overview:"Two-time champions reborn under Marcelo Bielsa's relentless pressing game, spearheaded by Darwin Núñez and Federico Valverde. Small country, giant World Cup pedigree — the classic value pick."},
+    "France":{rank:1,apps:17,best:"Champions ×2",bestWC:"1998 & 2018",overview:"The world's No. 1 ranked team, finalists at the last two World Cups, with Kylian Mbappé chasing the one record that matters. Les Bleus' squad depth remains the envy of every nation on Earth."},
+    "Senegal":{rank:14,apps:4,best:"Quarter-finals",bestWC:"2002",overview:"Africa's second-highest ranked side and unbeaten across a long stretch of recent fixtures, with Sadio Mané passing the torch to a fearsome new generation. A genuine threat to any seed."},
+    "Iraq":{rank:57,apps:2,best:"Group stage",bestWC:"1986",overview:"Forty years after their only previous appearance, Iraq came through the inter-confederation play-offs to spark wild celebrations back home. One of the great qualification stories of this cycle."},
+    "Norway":{rank:31,apps:4,best:"Round of 16",bestWC:"1998",overview:"Erling Haaland and Martin Ødegaard finally drag Norway back to the World Cup for the first time since 1998 — and they did it by steamrolling their qualifying group. The outsider every favourite wants to avoid."},
+    "Argentina":{rank:3,apps:19,best:"Champions ×3",bestWC:"1978, 1986 & 2022",overview:"The defending champions, and in all likelihood Lionel Messi's final World Cup at 38. The core of Qatar 2022 remains, fortified by a new generation — no team defends a title easily, but few have tried with this much class."},
+    "Algeria":{rank:28,apps:5,best:"Round of 16",bestWC:"2014",overview:"Back at the World Cup for the first time since taking Germany to extra time in 2014. Riyad Mahrez captains a technically gifted squad that dominated its qualifying group."},
+    "Austria":{rank:24,apps:8,best:"Third place",bestWC:"1954",overview:"Ralf Rangnick's high-pressing machine ended a 28-year World Cup absence by winning their group ahead of more fancied rivals. Tactically ferocious and a popular dark-horse pick across Europe."},
+    "Jordan":{rank:63,apps:1,best:"Debut",bestWC:"—",overview:"World Cup debutants who announced themselves by reaching the 2023 Asian Cup final. Musa Al-Taamari leads a counter-attacking side that has already proven it can upset the region's giants."},
+    "Portugal":{rank:5,apps:9,best:"Third place",bestWC:"1966",overview:"A record sixth World Cup for Cristiano Ronaldo, 41, chasing the one trophy that has escaped him — backed by arguably the deepest Portuguese squad ever assembled. Recent Nations League winners and a top-five ranked side."},
+    "DR Congo":{rank:46,apps:2,best:"Group stage",bestWC:"1974 (as Zaire)",overview:"Back at the World Cup for the first time since 1974, when they appeared as Zaire, after an epic play-off route capped in the inter-confederation final. The Leopards bring one of qualifying's most emotional stories."},
+    "Uzbekistan":{rank:50,apps:1,best:"Debut",bestWC:"—",overview:"Historic first-time qualifiers from Central Asia, anchored by Manchester City centre-back Abdukodir Khusanov. Defensively disciplined and absolutely fearless — a banana skin in Group K."},
+    "Colombia":{rank:13,apps:7,best:"Quarter-finals",bestWC:"2014",overview:"Luis Díaz and James Rodríguez headline a side that went on a long unbeaten run through CONMEBOL qualifying. The 2014 quarter-finalists are ranked inside the world's top 15 and built for a deep run."},
+    "England":{rank:4,apps:17,best:"Champions",bestWC:"1966",overview:"Thomas Tuchel was hired for exactly this tournament: to turn three consecutive near-misses into a first trophy since 1966. Harry Kane and a ludicrous depth of attacking talent make England among the bookmakers' favourites."},
+    "Croatia":{rank:11,apps:7,best:"Runners-up",bestWC:"2018",overview:"Finalists in 2018, third in 2022 — the great tournament overachievers return for what is surely Luka Modrić's farewell at 40. A nation of under four million that simply refuses to go home early."},
+    "Ghana":{rank:74,apps:5,best:"Quarter-finals",bestWC:"2010",overview:"The Black Stars are back after a rocky cycle, forever haunted by the handball that denied them a 2010 semi-final. The Ayew era has passed to Mohammed Kudus, who can win a game on his own."},
+    "Panama":{rank:33,apps:2,best:"Group stage",bestWC:"2018",overview:"A second-ever World Cup, earned by winning their CONCACAF qualifying group outright. Far stronger than the 2018 debutants, Los Canaleros arrive ranked among the world's top 35."}
+  };
+
+  /* ===== Modal logic ===== */
+  const overlay = document.getElementById('overlay');
+  const closeBtn = document.getElementById('close-btn');
+  let lastFocus = null;
+
+  function openProfile(name, flag, groupLetter){
+    const t = TEAMS[name];
+    if(!t) return;
+    document.getElementById('p-flag').textContent = flag;
+    document.getElementById('p-name').textContent = name;
+    document.getElementById('p-group').textContent = 'Group ' + groupLetter;
+    document.getElementById('p-overview').textContent = t.overview;
+    document.getElementById('p-rank').textContent = '#' + t.rank;
+    document.getElementById('p-apps').textContent = t.apps;
+    document.getElementById('p-best').textContent = t.best;
+    document.getElementById('p-best-lbl').textContent = t.bestWC === '—' ? 'Best finish' : 'Best finish · ' + t.bestWC;
+    lastFocus = document.activeElement;
+    overlay.classList.add('open');
+    closeBtn.focus();
+  }
+  function closeProfile(){
+    overlay.classList.remove('open');
+    if(lastFocus) lastFocus.focus();
+  }
+  closeBtn.addEventListener('click', closeProfile);
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeProfile(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && overlay.classList.contains('open')) closeProfile(); });
+
+  document.querySelectorAll('.group').forEach(group => {
+    const letter = group.querySelector('.g-letter').textContent.trim();
+    group.querySelectorAll('li').forEach(li => {
+      const clone = li.cloneNode(true);
+      clone.querySelectorAll('span').forEach(s => s.remove());
+      const name = clone.textContent.trim();
+      const flag = li.querySelector('.flag').textContent;
+      li.setAttribute('tabindex','0');
+      li.setAttribute('role','button');
+      li.setAttribute('aria-label', name + ' — view team profile');
+      li.addEventListener('click', () => openProfile(name, flag, letter));
+      li.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openProfile(name, flag, letter); }
+      });
+    });
+  });
+
+  /* ================================================================
+     SWEEPSTAKE ENGINE
+     1. PAIRS: fill in once the draft has happened. Picks in draft order.
+     2. RESULTS: update per nation as the tournament progresses, or host
+        a results.json next to this file and it will be loaded instead.
+     ================================================================ */
+  const PAIRS = [
+    // { seed:1, name:"Fraser & Steph", picks:["Spain","Norway","Egypt","Panama","Haiti","Jordan"] },
+  ];
+
+  // gw = group-stage wins (2 pts each; draws score nothing)
+  // stage = furthest reached: "group" | "r32" | "r16" | "qf" | "sf" | "fourth" | "third" | "runnerup" | "champion"
+  const RESULTS = {
+    // "Spain": { gw:0, stage:"group" },
+  };
+  const LAST_UPDATED = "Awaiting kick-off";
+
+  const STAGE_PTS = { group:0, r32:4, r16:10, qf:18, sf:28, fourth:31, third:34, runnerup:40, champion:48 };
+  // (cumulative ladder: r32 4 · +6 r16 · +8 qf · +10 sf · then 4th +3 / 3rd +6 / RU +12 / champ +20)
+
+  function teamPoints(nation){
+    const r = RESULTS[nation];
+    if(!r) return 0;
+    return (r.gw||0)*2 + (STAGE_PTS[r.stage] ?? 0);
+  }
+  function flagOf(nation){
+    const t = TEAMS[nation];
+    for (const li of document.querySelectorAll('.group li')){
+      const c = li.cloneNode(true);
+      c.querySelectorAll('span').forEach(s=>s.remove());
+      if(c.textContent.trim() === nation) return li.querySelector('.flag').textContent;
+    }
+    return "";
+  }
+  function comingSoon(msg){
+    return '<div class="scoreboard"><div class="led">Coming Soon</div><span class="small">'+msg+'</span></div>';
+  }
+
+  function renderAllocation(){
+    const el = document.getElementById('allocation-content');
+    if(!PAIRS.length){
+      el.innerHTML = comingSoon("The snake draft hasn't happened yet — squads will appear here");
+      return;
+    }
+    el.innerHTML = '<div class="draft-grid">' + PAIRS.map(p =>
+      '<div class="squad"><div class="squad-head"><span class="s-name">'+p.name+'</span><span class="s-seed">Seed '+p.seed+'</span></div><ul>' +
+      Array.from({length:6}, (_,i) => {
+        const n = p.picks[i];
+        return n
+          ? '<li><span class="pick-no">R'+(i+1)+'</span><span class="flag">'+flagOf(n)+'</span>'+n+'</li>'
+          : '<li class="empty"><span class="pick-no">R'+(i+1)+'</span>—</li>';
+      }).join('') + '</ul></div>'
+    ).join('') + '</div>';
+  }
+
+  function renderScore(){
+    const el = document.getElementById('score-content');
+    if(!PAIRS.length){
+      el.innerHTML = comingSoon("Standings go live once squads are drafted and the tournament kicks off");
+      return;
+    }
+    const rows = PAIRS.map(p => ({
+      name:p.name,
+      picks:p.picks.filter(Boolean),
+      total:p.picks.filter(Boolean).reduce((s,n)=>s+teamPoints(n),0)
+    })).sort((a,b)=>b.total-a.total);
+    el.innerHTML =
+      '<div class="board"><div class="board-row head"><span>Pos</span><span>Company Team</span><span style="text-align:right">Points</span></div>' +
+      rows.map((r,i)=>
+        '<div class="board-row"><span class="pos">'+(i+1)+'</span><span class="pair">'+r.name+
+        '<span class="teams-mini">'+r.picks.map(n=>flagOf(n)+' '+teamPoints(n)).join(' · ')+'</span></span>'+
+        '<span class="total">'+r.total+'</span></div>'
+      ).join('') + '</div>' +
+      '<p class="updated-note">Last updated: '+LAST_UPDATED+'</p>';
+  }
+
+  // If hosted (e.g. GitHub Pages), a results.json beside this file overrides the embedded data:
+  // { "lastUpdated":"18 June, 22:00 BST", "results": { "Spain": {"gw":1,"stage":"group"}, ... } }
+  fetch('results.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).then(data => {
+    if(data && data.results){
+      Object.assign(RESULTS, data.results);
+      if(data.lastUpdated){
+        document.querySelectorAll('.updated-note').forEach(n => n.textContent = 'Last updated: ' + data.lastUpdated);
+      }
+      renderScore();
+    }
+  }).catch(()=>{});
+
+  renderAllocation();
+  renderScore();
+</script>
+
+</body>
+</html>
