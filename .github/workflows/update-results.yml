@@ -18,7 +18,7 @@ jobs:
       - name: Update results.json from football-data.org
         env:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
-        run: python3 /update_results.py
+        run: python3 update_results.py
 
       - name: Commit if changed
         run: |
