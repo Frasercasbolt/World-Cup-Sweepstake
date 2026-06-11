@@ -36,6 +36,8 @@ ALIASES = {
     "Bosnia and Herzegovina": "Bosnia & Herzegovina",
     "Turkey": "Türkiye",
     "Cabo Verde": "Cape Verde",
+    "Cape Verde Islands": "Cape Verde",
+    "Cabo Verde Islands": "Cape Verde",
     "IR Iran": "Iran",
     "Congo DR": "DR Congo",
     "DR Congo": "DR Congo",
@@ -109,7 +111,8 @@ def collect_matches(data, valid):
             "hs": ft.get("home"), "as": ft.get("away"),
         }
         if st == "g":
-            grp = (m.get("group") or "").replace("Group ", "").strip()
+            # feed formats vary: "Group A" or "GROUP_A" -> "A"
+            grp = (m.get("group") or "").replace("Group ", "").replace("GROUP_", "").strip()
             if grp:
                 entry["g"] = grp
         dur = sc.get("duration")
@@ -154,9 +157,12 @@ def main():
             if winner:
                 results[winner]["gw"] += 1
                 results[loser]["gl"] += 1
-            else:
+            elif winner_flag == "DRAW":
                 results[home]["gd"] += 1
                 results[away]["gd"] += 1
+            # else: feed says FINISHED but hasn't published the result yet
+            # (observed with the opening match) — count nothing now; the
+            # next run picks it up once the score lands.
         elif stage in STAGE_REACHED:
             bump(results, home, STAGE_REACHED[stage])
             bump(results, away, STAGE_REACHED[stage])

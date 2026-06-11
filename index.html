@@ -2121,8 +2121,13 @@
     const h = m ? m.h : f.h, a = m ? m.a : f.a;
     const ut = (m && m.utc) || f.utc;
     let mid;
-    if(isFin(m) || isLive(m)){
+    const hasScore = m && m.hs != null && m.as != null;
+    if((isFin(m) || isLive(m)) && hasScore){
       mid = '<span class="gm-score">'+m.hs+"–"+m.as+'</span>'+(isLive(m)?'<span class="gm-live">● Live</span>':"");
+    } else if(isFin(m)){
+      mid = '<span class="gm-time">FT<br>score soon</span>'; // feed lags scores briefly after full time
+    } else if(isLive(m)){
+      mid = '<span class="gm-live">● Live</span>';
     } else {
       mid = '<span class="gm-time">'+fmtDay(ut)+'<br>'+fmtTime(ut)+'</span>';
     }
