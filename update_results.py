@@ -20,7 +20,7 @@ if not API_KEY:
 COMPETITION = "WC"  # FIFA World Cup on football-data.org
 URL = f"https://api.football-data.org/v4/competitions/{COMPETITION}/matches"
 
-HERE = os.path.dirname((os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.abspath(__file__))
 RESULTS_PATH = os.path.join(HERE, "results.json")
 
 # football-data.org name -> site name (extend if the feed surprises us)
