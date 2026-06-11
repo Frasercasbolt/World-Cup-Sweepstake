@@ -53,12 +53,78 @@ STAGE_REACHED = {
 }
 STAGE_ORDER = ["group", "r32", "r16", "qf", "sf", "fourth", "third", "runnerup", "champion"]
 
+# football-data.org stage -> short stage key used by the Match Centre tab
+STAGE_KEY = {
+    "GROUP_STAGE": "g",
+    "LAST_32": "r32", "ROUND_OF_32": "r32",
+    "LAST_16": "r16", "ROUND_OF_16": "r16",
+    "QUARTER_FINALS": "qf",
+    "SEMI_FINALS": "sf",
+    "THIRD_PLACE": "3rd",
+    "FINAL": "final",
+}
+
 
 def canon(name: str, valid: set) -> str:
     name = ALIASES.get(name, name)
     if name not in valid:
         sys.exit(f"Unmapped team name from feed: '{name}'. Add it to ALIASES.")
     return name
+
+
+def soft_name(raw, valid: set, status: str):
+    """Map a feed name for the matches list. Same paranoia as canon() for
+    FINISHED matches; for scheduled/in-play knockouts the feed may carry
+    placeholders, which we pass through as None (the site shows its own
+    bracket labels instead)."""
+    if not raw:
+        return None
+    name = ALIASES.get(raw, raw)
+    if name in valid:
+        return name
+    if status == "FINISHED":
+        sys.exit(f"Unmapped team name from feed: '{raw}'. Add it to ALIASES.")
+    return None
+
+
+def collect_matches(data, valid):
+    """Flatten the feed into the per-match list consumed by the Matches tab."""
+    out = []
+    for m in data.get("matches", []):
+        st = STAGE_KEY.get(m.get("stage", ""))
+        if not st:
+            continue
+        status = m.get("status", "")
+        home = soft_name(m.get("homeTeam", {}).get("name"), valid, status)
+        away = soft_name(m.get("awayTeam", {}).get("name"), valid, status)
+        sc = m.get("score", {}) or {}
+        ft = sc.get("fullTime", {}) or {}
+        wflag = sc.get("winner")
+        winner = home if wflag == "HOME_TEAM" else away if wflag == "AWAY_TEAM" else None
+        entry = {
+            "st": st,
+            "utc": m.get("utcDate"),
+            "status": status,
+            "h": home, "a": away,
+            "hs": ft.get("home"), "as": ft.get("away"),
+        }
+        if st == "g":
+            grp = (m.get("group") or "").replace("Group ", "").strip()
+            if grp:
+                entry["g"] = grp
+        dur = sc.get("duration")
+        if dur == "PENALTY_SHOOTOUT":
+            pens = sc.get("penalties", {}) or {}
+            entry["dur"] = "pens"
+            entry["hp"] = pens.get("home")
+            entry["ap"] = pens.get("away")
+        elif dur == "EXTRA_TIME":
+            entry["dur"] = "aet"
+        if winner:
+            entry["w"] = winner
+        out.append(entry)
+    out.sort(key=lambda x: (x["utc"] or ""))
+    return out
 
 
 def bump(results: dict, team: str, stage: str):
@@ -125,10 +191,12 @@ def main():
             if t not in r32_teams and results[t]["stage"] == "group":
                 results[t]["out"] = True
 
+    matches = collect_matches(data, valid)
+
     now = datetime.datetime.now(datetime.timezone.utc).strftime("%d %B, %H:%M UTC")
-    json.dump({"lastUpdated": now, "results": results},
+    json.dump({"lastUpdated": now, "results": results, "matches": matches},
               open(RESULTS_PATH, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
-    print(f"results.json updated at {now}")
+    print(f"results.json updated at {now} ({len(matches)} matches in feed)")
 
 
 if __name__ == "__main__":
