@@ -169,6 +169,65 @@
     letter-spacing:.12em;
   }
 
+  /* ===== Calendar download dropdown ===== */
+  .cal-menu{
+    position:absolute; top:.9rem; right:.9rem; z-index:6;
+    text-align:left;
+  }
+  .cal-btn{
+    appearance:none; cursor:pointer;
+    background:rgba(0,0,0,.35);
+    border:1px solid var(--line); border-radius:3px;
+    color:var(--chalk-dim);
+    font-family:'Space Mono',monospace; font-size:.62rem;
+    letter-spacing:.12em; text-transform:uppercase;
+    padding:.5rem .7rem .45rem;
+    transition:color .15s, border-color .15s;
+  }
+  .cal-menu:hover .cal-btn, .cal-menu.open .cal-btn, .cal-btn:focus-visible{
+    color:var(--amber); border-color:var(--amber);
+  }
+  .cal-btn:focus-visible{outline:3px solid var(--amber)}
+  .cal-list{
+    display:none;
+    position:absolute; right:0; top:calc(100% + .4rem);
+    min-width:14.5rem;
+    background:var(--tunnel);
+    border:2px solid var(--amber); border-radius:4px;
+    box-shadow:0 18px 40px rgba(0,0,0,.55);
+    padding:.3rem;
+  }
+  .cal-menu:hover .cal-list,
+  .cal-menu.open .cal-list,
+  .cal-menu:focus-within .cal-list{display:block; animation:fade .15s ease}
+  .cal-item{
+    appearance:none; border:none; background:none; cursor:pointer;
+    display:flex; align-items:center; gap:.5rem;
+    width:100%; text-align:left;
+    font-family:'Space Mono',monospace; font-size:.66rem;
+    letter-spacing:.08em; text-transform:uppercase;
+    color:var(--chalk);
+    padding:.5rem .65rem .45rem;
+    border-radius:2px;
+    transition:background .12s, color .12s;
+  }
+  .cal-item:hover{background:rgba(255,210,63,.14); color:var(--amber)}
+  .cal-item:focus-visible{outline:2px solid var(--amber); outline-offset:-2px}
+  .cal-item .cal-dot{
+    width:.6em; height:.6em; border-radius:50%; flex-shrink:0;
+    background:var(--oc, var(--amber));
+  }
+  .cal-sep{height:1px; background:rgba(245,248,241,.18); margin:.25rem .4rem}
+  .cal-note{
+    font-family:'Space Mono',monospace; font-size:.52rem;
+    letter-spacing:.06em; color:var(--chalk-dim);
+    padding:.4rem .65rem .35rem; line-height:1.5;
+  }
+  @media (max-width:640px){
+    .cal-btn-label{display:none}
+    .cal-btn{padding:.45rem .55rem .4rem; font-size:.72rem}
+  }
+
   /* ===== Tabs: fixture board strip (two tiers) ===== */
   nav{
     background:var(--pitch-deep);
@@ -1153,6 +1212,10 @@
   <div class="kicker">FIFA World Cup 26 · USA / Canada / Mexico</div>
   <h1>Guggenheim 2026<br><span class="accent">World Cup Sweepstake</span></h1>
   <div class="sub">11 June – 19 July 2026 · 48 teams · One winner</div>
+  <div class="cal-menu" id="cal-menu">
+    <button class="cal-btn" id="cal-btn" aria-haspopup="true" aria-expanded="false">📅<span class="cal-btn-label"> Download calendar</span> ▾</button>
+    <div class="cal-list" id="cal-list" role="menu" aria-label="Download calendar"></div>
+  </div>
 </header>
 
 <nav aria-label="Sweepstake sections">
@@ -2141,6 +2204,106 @@
     renderBracket();
     renderGroups();
   }
+
+  /* ================================================================
+     CALENDAR DOWNLOADS (.ics — Outlook / Apple / Google compatible)
+     "All matches" = full 104-fixture schedule (knockouts show bracket
+     labels until decided). Team calendars = that company team's nations,
+     knockout games included once the pairing is confirmed by the feed.
+     ================================================================ */
+  const SITE_URL = "https://frasercasbolt.github.io/World-Cup-Sweepstake/";
+  const icsEscape = s => String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
+  const icsDate = (utc, addMin) => new Date(Date.parse(utc)+(addMin||0)*6e4)
+    .toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z");
+  function foldLine(l){
+    // RFC 5545 folding: lines max 75 octets (not chars — emoji/accents are multi-byte)
+    const out = [];
+    let cur = "", bytes = 0;
+    for(const ch of l){
+      const cp = ch.codePointAt(0);
+      const b = cp < 128 ? 1 : cp < 2048 ? 2 : cp < 65536 ? 3 : 4;
+      if(bytes + b > 73){ out.push(cur); cur = " "+ch; bytes = 1+b; }
+      else { cur += ch; bytes += b; }
+    }
+    out.push(cur);
+    return out.join("\r\n");
+  }
+  function calEvents(seed){
+    const evs = [];
+    const own = n => OWNERS[n] ? OWNERS[n].team : "—";
+    const want = n => seed == null || (n && OWNERS[n] && OWNERS[n].seed === seed);
+    GS.forEach((f,i) => {
+      const m = f.m, h = m ? m.h : f.h, a = m ? m.a : f.a;
+      if(!want(h) && !want(a)) return;
+      evs.push({ uid:"wc26-g"+i, ut:(m && m.utc) || f.utc, dur:120,
+        sum:h+" v "+a+" · WC26 Group "+f.g,
+        desc:"Guggenheim sweepstake: "+h+" → "+own(h)+" · "+a+" → "+own(a)+"\nLive board: "+SITE_URL });
+    });
+    const KO_NAME = {r32:"Round of 32", r16:"Round of 16", qf:"Quarter-final", sf:"Semi-final", "3rd":"Third-place play-off", final:"FINAL"};
+    Object.keys(KO).forEach(k => {
+      const n = +k, m = koData[n], h = m && m.h, a = m && m.a;
+      if(seed != null && !want(h) && !want(a)) return; // team calendars: confirmed pairings only
+      const hn = h || KO[n].hl, an = a || KO[n].al;
+      let desc = "Guggenheim sweepstake";
+      if(h || a) desc += ": " + [h ? h+" → "+own(h) : null, a ? a+" → "+own(a) : null].filter(Boolean).join(" · ");
+      desc += "\nLive board: " + SITE_URL;
+      evs.push({ uid:"wc26-m"+n, ut:(m && m.utc) || KO[n].utc, dur:165,
+        sum:hn+" v "+an+" · WC26 "+KO_NAME[stageOfSlot(n)]+" (M"+n+")", desc });
+    });
+    return evs;
+  }
+  function downloadCal(seed){
+    const evs = calEvents(seed);
+    const stamp = icsDate(new Date().toISOString());
+    const teamName = seed == null ? "All matches" : (PAIRS.find(p => p.seed === seed) || {name:"Team "+seed}).name;
+    const lines = ["BEGIN:VCALENDAR","VERSION:2.0",
+      "PRODID:-//Guggenheim WC26 Sweepstake//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      foldLine("X-WR-CALNAME:"+icsEscape("WC26 Sweepstake · "+teamName))];
+    evs.forEach(e => {
+      lines.push("BEGIN:VEVENT",
+        "UID:"+e.uid+"@frasercasbolt.github.io",
+        "DTSTAMP:"+stamp,
+        "DTSTART:"+icsDate(e.ut),
+        "DTEND:"+icsDate(e.ut, e.dur),
+        foldLine("SUMMARY:"+icsEscape("⚽ "+e.sum)),
+        foldLine("DESCRIPTION:"+icsEscape(e.desc)),
+        "END:VEVENT");
+    });
+    lines.push("END:VCALENDAR");
+    const blob = new Blob([lines.join("\r\n")+"\r\n"], {type:"text/calendar;charset=utf-8"});
+    const aEl = document.createElement("a");
+    aEl.href = URL.createObjectURL(blob);
+    aEl.download = "wc26-" + (seed == null ? "all-matches" : "team-"+seed) + ".ics";
+    document.body.appendChild(aEl);
+    aEl.click();
+    setTimeout(() => { URL.revokeObjectURL(aEl.href); aEl.remove(); }, 500);
+  }
+  (function initCalMenu(){
+    const menu = document.getElementById("cal-menu");
+    const btn = document.getElementById("cal-btn");
+    const list = document.getElementById("cal-list");
+    list.innerHTML =
+      '<button class="cal-item" data-cal="all" role="menuitem"><span class="cal-dot"></span>All matches</button>'+
+      '<div class="cal-sep"></div>'+
+      PAIRS.map(p => '<button class="cal-item" data-cal="'+p.seed+'" role="menuitem" style="--oc:'+TEAM_COLORS[p.seed]+'">'+
+        '<span class="cal-dot"></span>'+p.name+"</button>").join("")+
+      '<div class="cal-note">Works with Outlook, Apple & Google Calendar. Team calendars gain knockout games as pairings are confirmed — re-download any time (re-importing updates, not duplicates).</div>';
+    list.querySelectorAll(".cal-item").forEach(it => it.addEventListener("click", () => {
+      downloadCal(it.dataset.cal === "all" ? null : +it.dataset.cal);
+      menu.classList.remove("open");
+      btn.setAttribute("aria-expanded","false");
+    }));
+    btn.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open);
+    });
+    document.addEventListener("click", e => {
+      if(!menu.contains(e.target)){ menu.classList.remove("open"); btn.setAttribute("aria-expanded","false"); }
+    });
+    document.addEventListener("keydown", e => {
+      if(e.key === "Escape"){ menu.classList.remove("open"); btn.setAttribute("aria-expanded","false"); }
+    });
+  })();
 
   // redraw connectors when the Matches tab is opened or the window resizes
   tabs.forEach(t => t.addEventListener("click", () => {
