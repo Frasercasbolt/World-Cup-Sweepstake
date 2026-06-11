@@ -171,7 +171,7 @@
 
   /* ===== Calendar download dropdown ===== */
   .cal-menu{
-    position:absolute; top:.9rem; right:.9rem; z-index:6;
+    position:absolute; top:.9rem; right:.9rem; z-index:30;
     text-align:left;
   }
   .cal-btn{
@@ -190,24 +190,29 @@
   .cal-btn:focus-visible{outline:3px solid var(--amber)}
   .cal-list{
     display:none;
-    position:absolute; right:0; top:calc(100% + .4rem);
-    min-width:14.5rem;
+    position:absolute; right:0; top:calc(100% + .35rem);
+    min-width:13rem;
     background:var(--tunnel);
     border:2px solid var(--amber); border-radius:4px;
     box-shadow:0 18px 40px rgba(0,0,0,.55);
-    padding:.3rem;
+    padding:.25rem;
+  }
+  /* invisible bridge over the gap so hover survives the cursor's journey down */
+  .cal-list::before{
+    content:""; position:absolute;
+    top:-.45rem; left:0; right:0; height:.45rem;
   }
   .cal-menu:hover .cal-list,
   .cal-menu.open .cal-list,
   .cal-menu:focus-within .cal-list{display:block; animation:fade .15s ease}
   .cal-item{
     appearance:none; border:none; background:none; cursor:pointer;
-    display:flex; align-items:center; gap:.5rem;
+    display:flex; align-items:center; gap:.45rem;
     width:100%; text-align:left;
-    font-family:'Space Mono',monospace; font-size:.66rem;
-    letter-spacing:.08em; text-transform:uppercase;
+    font-family:'Space Mono',monospace; font-size:.6rem;
+    letter-spacing:.07em; text-transform:uppercase;
     color:var(--chalk);
-    padding:.5rem .65rem .45rem;
+    padding:.34rem .55rem .3rem;
     border-radius:2px;
     transition:background .12s, color .12s;
   }
@@ -217,12 +222,39 @@
     width:.6em; height:.6em; border-radius:50%; flex-shrink:0;
     background:var(--oc, var(--amber));
   }
-  .cal-sep{height:1px; background:rgba(245,248,241,.18); margin:.25rem .4rem}
+  .cal-sep{height:1px; background:rgba(245,248,241,.18); margin:.12rem .35rem}
+  .cal-teams{display:grid; grid-template-columns:1fr 1fr; gap:0 .1rem}
   .cal-note{
-    font-family:'Space Mono',monospace; font-size:.52rem;
-    letter-spacing:.06em; color:var(--chalk-dim);
-    padding:.4rem .65rem .35rem; line-height:1.5;
+    font-family:'Space Mono',monospace; font-size:.48rem;
+    letter-spacing:.04em; color:var(--chalk-dim);
+    padding:.28rem .55rem .2rem; line-height:1.4;
+    border-top:1px solid rgba(245,248,241,.12); margin-top:.12rem;
   }
+
+  /* ===== Team nicknames: the headline act (team number stays small) ===== */
+  .s-nick, .pair-nick, .l-nick{
+    display:block;
+    font-family:'Anton',Impact,sans-serif; font-weight:400;
+    color:var(--amber);
+    text-transform:uppercase; letter-spacing:.05em;
+    line-height:1.05;
+  }
+  .s-nick{font-size:1.25rem; margin-top:.2rem}
+  .pair-nick{font-size:1.35rem; margin-top:.2rem}
+  .l-nick{font-size:1.45rem; margin-top:.25rem}
+  .tk-nick{
+    display:block;
+    font-family:'Space Mono',monospace; font-size:.5rem;
+    color:var(--amber); letter-spacing:.04em; margin-top:.1rem;
+  }
+  .s-nick.tbc, .pair-nick.tbc, .l-nick.tbc, .tk-nick.tbc{
+    font-family:'Space Mono',monospace;
+    color:var(--chalk-dim); font-style:italic;
+    text-transform:none; letter-spacing:.06em;
+  }
+  .s-nick.tbc{font-size:.56rem}
+  .pair-nick.tbc{font-size:.64rem}
+  .l-nick.tbc{font-size:.55rem}
   @media (max-width:640px){
     .cal-btn-label{display:none}
     .cal-btn{padding:.45rem .55rem .4rem; font-size:.72rem}
@@ -625,8 +657,9 @@
   }
   .board-row .pair{font-weight:700; font-size:1rem}
   .board-row .pair .teams-mini{
-    display:block; font-weight:400; font-size:.78rem;
-    color:var(--chalk-dim); margin-top:.15rem;
+    display:block; font-family:'Archivo',system-ui,sans-serif;
+    font-weight:400; font-size:.78rem; letter-spacing:0;
+    text-transform:none; color:var(--chalk-dim); margin-top:.2rem;
   }
   .board-row .total{
     font-family:'Anton',Impact,sans-serif; font-size:1.5rem;
@@ -1630,14 +1663,16 @@
      2. RESULTS: update per nation as the tournament progresses, or host
         a results.json next to this file and it will be loaded instead.
      ================================================================ */
+  // nick: the team's chosen nickname — edit the text inside the quotes as teams pick theirs
   const PAIRS = [
-    { seed:1, name:"Team 1", members:["Jon", "Juan", "Thomas"], picks:["France", "Croatia", "Switzerland", "South Korea", "Canada", "DR Congo", "Scotland", "Jordan"] },
-    { seed:2, name:"Team 2", members:["Kolly", "Jan", "Cosimo"], picks:["Spain", "Norway", "Uruguay", "Sweden", "Bosnia & Herzegovina", "South Africa", "New Zealand", "Haiti"] },
-    { seed:3, name:"Team 3", members:["George", "Marco", "Fraser"], picks:["England", "Morocco", "Mexico", "Egypt", "Algeria", "Australia", "Tunisia", "Iraq"] },
-    { seed:4, name:"Team 4", members:["Albert", "Pepe", "Giulia"], picks:["Argentina", "Belgium", "Colombia", "Senegal", "Ecuador", "Paraguay", "Uzbekistan", "Curaçao"] },
-    { seed:5, name:"Team 5", members:["Hana", "Julia", "Jakob"], picks:["Brazil", "Portugal", "United States", "Austria", "Czechia", "Ghana", "Saudi Arabia", "Panama"] },
-    { seed:6, name:"Team 6", members:["PJ", "Emanuele", "Oli"], picks:["Germany", "Netherlands", "Japan", "Türkiye", "Côte d'Ivoire", "Iran", "Qatar", "Cape Verde"] }
+    { seed:1, name:"Team 1", nick:"Name TBC", members:["Jon", "Juan", "Thomas"], picks:["France", "Croatia", "Switzerland", "South Korea", "Canada", "DR Congo", "Scotland", "Jordan"] },
+    { seed:2, name:"Team 2", nick:"Name TBC", members:["Kolly", "Jan", "Cosimo"], picks:["Spain", "Norway", "Uruguay", "Sweden", "Bosnia & Herzegovina", "South Africa", "New Zealand", "Haiti"] },
+    { seed:3, name:"Team 3", nick:"The Brexit Bedouins", members:["George", "Marco", "Fraser"], picks:["England", "Morocco", "Mexico", "Egypt", "Algeria", "Australia", "Tunisia", "Iraq"] },
+    { seed:4, name:"Team 4", nick:"Name TBC", members:["Albert", "Pepe", "Giulia"], picks:["Argentina", "Belgium", "Colombia", "Senegal", "Ecuador", "Paraguay", "Uzbekistan", "Curaçao"] },
+    { seed:5, name:"Team 5", nick:"Name TBC", members:["Hana", "Julia", "Jakob"], picks:["Brazil", "Portugal", "United States", "Austria", "Czechia", "Ghana", "Saudi Arabia", "Panama"] },
+    { seed:6, name:"Team 6", nick:"Name TBC", members:["PJ", "Emanuele", "Oli"], picks:["Germany", "Netherlands", "Japan", "Türkiye", "Côte d'Ivoire", "Iran", "Qatar", "Cape Verde"] }
   ];
+  const nickHTML = (p, cls) => '<span class="'+cls+(p.nick==="Name TBC"?" tbc":"")+'">'+p.nick+'</span>';
 
   // Per nation — group-stage record entered manually or by the updater:
   //   gw/gd/gl = group wins/draws/losses · stage = furthest reached · out = eliminated?
@@ -1692,7 +1727,7 @@
       return;
     }
     el.innerHTML = '<div class="draft-grid">' + PAIRS.map(p =>
-      '<div class="squad"><div class="squad-head"><span class="s-name">'+p.name+'</span><span class="s-seed">Seed '+p.seed+'</span></div>'+
+      '<div class="squad"><div class="squad-head"><div><span class="s-name">'+p.name+'</span>'+nickHTML(p,'s-nick')+'</div><span class="s-seed">Seed '+p.seed+'</span></div>'+
       (p.members ? '<div class="squad-members">'+p.members.join(' · ')+'</div>' : '') + '<ul>' +
       Array.from({length:8}, (_,i) => {
         const n = p.picks[i];
@@ -1717,9 +1752,13 @@
 
     const summary =
       '<div class="board"><div class="board-row head"><span>Pos</span><span>Company Team</span><span style="text-align:right">Points</span></div>' +
-      teams.map((t,i)=>'<div class="board-row"><span class="pos">'+(i+1)+'</span><span class="pair">'+t.name+
-        (PAIRS.find(p=>p.name===t.name)?.members ? '<span class="teams-mini">'+PAIRS.find(p=>p.name===t.name).members.join(' · ')+'</span>' : '')+
-        '</span><span class="total">'+t.total+'</span></div>').join('') + '</div>';
+      teams.map((t,i)=>{
+        const p = PAIRS.find(pp=>pp.name===t.name);
+        return '<div class="board-row"><span class="pos">'+(i+1)+'</span><span class="pair">'+t.name+
+          (p ? nickHTML(p,'pair-nick') : '')+
+          (p && p.members ? '<span class="teams-mini">'+p.members.join(' · ')+'</span>' : '')+
+          '</span><span class="total">'+t.total+'</span></div>';
+      }).join('') + '</div>';
 
     el.innerHTML = summary + '<div class="live-stack">' + teams.map((t,i)=>{
       const rows = t.picks.map(n=>{
@@ -1735,8 +1774,9 @@
           '<div class="prog-dot" style="left:'+pct+'%"></div></div>'+
           '<span class="prog-label">'+label+'</span></div></div>';
       }).join('');
+      const p = PAIRS.find(pp=>pp.name===t.name);
       return '<div class="live-card"><div class="live-head"><span class="pos">'+(i+1)+'</span>'+
-        '<span class="l-name">'+t.name+'</span>'+
+        '<span class="l-name">'+t.name+(p ? nickHTML(p,'l-nick') : '')+'</span>'+
         '<span class="l-total">'+t.total+'<small>points</small></span></div>'+rows+'</div>';
     }).join('') + '</div>' +
     '<p class="rec-key">Record shown as W-D-L · slider tracks tournament progress</p>'+
@@ -2143,7 +2183,7 @@
     const el = document.getElementById("team-key");
     el.innerHTML = PAIRS.map(p =>
       '<button class="tk-chip" data-seed="'+p.seed+'" style="--oc:'+TEAM_COLORS[p.seed]+'" '+
-      'aria-pressed="false"><span class="tk-dot"></span>'+p.name+'</button>').join("")+
+      'aria-pressed="false"><span class="tk-dot"></span><span class="tk-txt">'+p.name+nickHTML(p,'tk-nick')+'</span></button>').join("")+
       '<span class="tk-hint">Tap a team to spotlight their nations</span>';
     el.querySelectorAll(".tk-chip").forEach(ch => ch.addEventListener("click", () => {
       FILTER = FILTER === +ch.dataset.seed ? null : +ch.dataset.seed;
@@ -2285,9 +2325,11 @@
     list.innerHTML =
       '<button class="cal-item" data-cal="all" role="menuitem"><span class="cal-dot"></span>All matches</button>'+
       '<div class="cal-sep"></div>'+
-      PAIRS.map(p => '<button class="cal-item" data-cal="'+p.seed+'" role="menuitem" style="--oc:'+TEAM_COLORS[p.seed]+'">'+
+      '<div class="cal-teams">'+
+      PAIRS.map(p => '<button class="cal-item" data-cal="'+p.seed+'" role="menuitem" style="--oc:'+TEAM_COLORS[p.seed]+'" title="'+p.nick.replace(/"/g,"&quot;")+'">'+
         '<span class="cal-dot"></span>'+p.name+"</button>").join("")+
-      '<div class="cal-note">Works with Outlook, Apple & Google Calendar. Team calendars gain knockout games as pairings are confirmed — re-download any time (re-importing updates, not duplicates).</div>';
+      '</div>'+
+      '<div class="cal-note">Outlook / Apple / Google · re-import updates, never duplicates</div>';
     list.querySelectorAll(".cal-item").forEach(it => it.addEventListener("click", () => {
       downloadCal(it.dataset.cal === "all" ? null : +it.dataset.cal);
       menu.classList.remove("open");
