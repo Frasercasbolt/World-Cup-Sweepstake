@@ -503,6 +503,12 @@
     font-family:'Space Mono',monospace; font-size:.62rem;
     letter-spacing:.12em; color:var(--amber);
   }
+  .squad-members{
+    font-family:'Space Mono',monospace; font-size:.66rem;
+    letter-spacing:.08em; color:var(--chalk-dim);
+    padding:.45rem .85rem .4rem;
+    border-bottom:1px dashed rgba(245,248,241,.18);
+  }
   .squad ul{list-style:none}
   .squad ul li{
     display:flex; align-items:center; gap:.55rem;
@@ -550,6 +556,85 @@
     text-align:center;
     font-family:'Space Mono',monospace; font-size:.65rem;
     letter-spacing:.1em; color:var(--chalk-dim); margin-top:1rem;
+  }
+
+  /* ===== Live score cards ===== */
+  .live-stack{display:grid; gap:1.1rem; max-width:860px; margin:1.4rem auto 0}
+  .live-card{
+    background:var(--card); border:2px solid var(--line); border-radius:4px; overflow:hidden;
+  }
+  .live-head{
+    background:var(--tunnel); border-bottom:3px solid var(--amber);
+    display:flex; align-items:center; gap:.9rem;
+    padding:.7rem 1rem .6rem;
+  }
+  .live-head .pos{
+    font-family:'Anton',Impact,sans-serif; font-size:1.5rem; color:var(--amber); line-height:1;
+  }
+  .live-head .l-name{
+    font-family:'Anton',Impact,sans-serif; font-size:1.1rem;
+    text-transform:uppercase; letter-spacing:.05em;
+  }
+  .live-head .l-total{
+    margin-left:auto; text-align:right;
+    font-family:'Anton',Impact,sans-serif; font-size:1.6rem; color:var(--amber); line-height:1;
+  }
+  .live-head .l-total small{
+    display:block; font-family:'Space Mono',monospace; font-size:.55rem;
+    letter-spacing:.16em; color:var(--chalk-dim); font-weight:400;
+  }
+  .nation-row{
+    display:grid;
+    grid-template-columns:minmax(8.5rem,1.1fr) 4.6rem 3rem minmax(8rem,1.4fr);
+    align-items:center; gap:.7rem;
+    padding:.55rem 1rem;
+    border-bottom:1px dashed rgba(245,248,241,.18);
+  }
+  .nation-row:last-child{border-bottom:none}
+  .nation-row.out-row .n-name, .nation-row.out-row .n-rec{color:var(--chalk-dim)}
+  .n-name{font-weight:700; font-size:.9rem; display:flex; align-items:center; gap:.5rem; min-width:0}
+  .n-name .flag{font-size:1.15rem; flex-shrink:0}
+  .n-name span.nm{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .n-rec{
+    font-family:'Space Mono',monospace; font-size:.78rem; color:var(--chalk);
+    letter-spacing:.04em; text-align:center; white-space:nowrap;
+  }
+  .n-pts{
+    font-family:'Anton',Impact,sans-serif; font-size:1.05rem; color:var(--amber); text-align:right;
+  }
+  .prog-wrap{display:flex; align-items:center; gap:.55rem; min-width:0}
+  .prog{
+    position:relative; flex:1; height:6px; border-radius:3px;
+    background:rgba(0,0,0,.35); border:1px solid rgba(245,248,241,.15);
+    min-width:4.5rem;
+  }
+  .prog-fill{
+    position:absolute; left:0; top:0; bottom:0;
+    background:var(--amber); border-radius:3px;
+    transition:width .5s ease;
+  }
+  .out-row .prog-fill{background:#5d6a61}
+  .prog-dot{
+    position:absolute; top:50%; transform:translate(-50%,-50%);
+    width:11px; height:11px; border-radius:50%;
+    background:var(--amber); border:2px solid var(--tunnel);
+  }
+  .out-row .prog-dot{background:#8a948d}
+  .champ-row .prog-fill, .champ-row .prog-dot{background:var(--amber); box-shadow:0 0 8px rgba(255,210,63,.7)}
+  .prog-label{
+    font-family:'Space Mono',monospace; font-size:.6rem;
+    letter-spacing:.08em; text-transform:uppercase;
+    color:var(--chalk-dim); width:4.6rem; text-align:right; flex-shrink:0;
+  }
+  .out-row .prog-label{color:#c0857d}
+  .rec-key{
+    text-align:center; font-family:'Space Mono',monospace;
+    font-size:.62rem; letter-spacing:.12em; color:var(--chalk-dim);
+    margin-top:1rem; text-transform:uppercase;
+  }
+  @media (max-width:560px){
+    .nation-row{grid-template-columns:1fr 4.2rem 2.6rem; row-gap:.3rem}
+    .prog-wrap{grid-column:1 / -1; padding-bottom:.15rem}
   }
 
   footer{
@@ -737,22 +822,22 @@
 
       <div class="rule-block">
         <h4>1 · The Teams</h4>
-        <p>The sweepstake runs with <strong>eight company teams</strong>, targeting two people per team based on an expected sign-up of sixteen. If demand is higher or lower, team sizes may be adjusted — but it'll be eight teams either way. You and your teammates share one squad, one score, and one destiny.</p>
+        <p>The sweepstake runs with <strong>six company teams of three</strong>, based on a sign-up of eighteen. Entry is <strong>£20 a head</strong> — £60 per team, every penny into the £360 prize pot. You and your two teammates share one squad, one score, and one destiny.</p>
       </div>
 
       <div class="rule-block">
         <h4>2 · The Snake Draft</h4>
         <ul>
-          <li>The eight company teams are ranked 1–8 to set the draft order.</li>
-          <li>Round one runs in order: seed 1 picks first, then 2, 3 … down to seed 8.</li>
-          <li>The order then <strong>snakes</strong>: seed 8 also opens round two, going back up to seed 1 — and so on, alternating direction each round.</li>
-          <li>Six rounds in total. 8 company teams × 6 picks = all 48 nations owned. No leftovers, no excuses.</li>
+          <li>The six company teams are ranked 1–6 to set the draft order.</li>
+          <li>Round one runs in order: seed 1 picks first, then 2, 3 … down to seed 6.</li>
+          <li>The order then <strong>snakes</strong>: seed 6 also opens round two, going back up to seed 1 — and so on, alternating direction each round.</li>
+          <li>Eight rounds in total. 6 company teams × 8 picks = all 48 nations owned. No leftovers, no excuses.</li>
         </ul>
       </div>
 
       <div class="rule-block">
         <h4>3 · Scoring</h4>
-        <p>Your six nations earn points for every result and every round they survive. Points are cumulative — a champion banks the whole ladder on the way up.</p>
+        <p>Your eight nations earn points for every result and every round they survive. Points are cumulative — a champion banks the whole ladder on the way up.</p>
         <table class="points">
           <tr><th>Achievement</th><th style="text-align:right">Points</th></tr>
           <tr><td>Group-stage win</td><td class="pts">2</td></tr>
@@ -770,7 +855,7 @@
 
       <div class="rule-block">
         <h4>4 · The Verdict</h4>
-        <p>Highest combined total across your six nations after the final on 19 July wins. Tie-break: most nations in the knockout rounds, then most group-stage goals scored, then a coin flip overseen by the most neutral person in the office.</p>
+        <p>Highest combined total across your eight nations after the final on 19 July wins. Tie-break: most nations in the knockout rounds, then most group-stage goals scored, then a coin flip overseen by the most neutral person in the office.</p>
       </div>
 
     </div>
@@ -1061,23 +1146,46 @@
         a results.json next to this file and it will be loaded instead.
      ================================================================ */
   const PAIRS = [
-    // { seed:1, name:"Fraser & Steph", picks:["Spain","Norway","Egypt","Panama","Haiti","Jordan"] },
+    { seed:1, name:"Team 1", members:["Jon", "Juan", "Thomas"], picks:["France", "Croatia", "Switzerland", "South Korea", "Canada", "DR Congo", "Scotland", "Jordan"] },
+    { seed:2, name:"Team 2", members:["Kolly", "Jan", "Cosimo"], picks:["Spain", "Norway", "Uruguay", "Sweden", "Bosnia & Herzegovina", "South Africa", "New Zealand", "Haiti"] },
+    { seed:3, name:"Team 3", members:["George", "Marco", "Fraser"], picks:["England", "Morocco", "Mexico", "Egypt", "Algeria", "Australia", "Tunisia", "Iraq"] },
+    { seed:4, name:"Team 4", members:["Albert", "Pepe", "Giulia"], picks:["Argentina", "Belgium", "Colombia", "Senegal", "Ecuador", "Paraguay", "Uzbekistan", "Curaçao"] },
+    { seed:5, name:"Team 5", members:["Hana", "Julia", "Jakob"], picks:["Brazil", "Portugal", "United States", "Austria", "Czechia", "Ghana", "Saudi Arabia", "Panama"] },
+    { seed:6, name:"Team 6", members:["PJ", "Emanuele", "Oli"], picks:["Germany", "Netherlands", "Japan", "Türkiye", "Côte d'Ivoire", "Iran", "Qatar", "Cape Verde"] }
   ];
 
-  // gw = group-stage wins (2 pts each; draws score nothing)
-  // stage = furthest reached: "group" | "r32" | "r16" | "qf" | "sf" | "fourth" | "third" | "runnerup" | "champion"
+  // Per nation — group-stage record entered manually or by the updater:
+  //   gw/gd/gl = group wins/draws/losses · stage = furthest reached · out = eliminated?
+  // Knockout W/L is derived automatically from stage + out.
+  // stage: "group" | "r32" | "r16" | "qf" | "sf" | "fourth" | "third" | "runnerup" | "champion"
   const RESULTS = {
-    // "Spain": { gw:0, stage:"group" },
+    // "Spain": { gw:0, gd:0, gl:0, stage:"group", out:false },
   };
   const LAST_UPDATED = "Awaiting kick-off";
 
   const STAGE_PTS = { group:0, r32:4, r16:10, qf:18, sf:28, fourth:31, third:34, runnerup:40, champion:48 };
   // (cumulative ladder: r32 4 · +6 r16 · +8 qf · +10 sf · then 4th +3 / 3rd +6 / RU +12 / champ +20)
+  const STAGE_FRAC  = { group:6, r32:22, r16:38, qf:54, sf:70, fourth:78, third:78, runnerup:86, champion:100 };
+  const STAGE_LABEL = { group:"Groups", r32:"R32", r16:"R16", qf:"Quarters", sf:"Semis", fourth:"4th", third:"3rd", runnerup:"Final", champion:"Champions" };
+  // knockout wins implied by reaching each stage; losses implied if out
+  const KO_WINS = { group:0, r32:0, r16:1, qf:2, sf:3, fourth:3, third:4, runnerup:4, champion:5 };
+  const KO_LOSS = { group:0, r32:1, r16:1, qf:1, sf:1, fourth:2, third:1, runnerup:1, champion:0 };
 
   function teamPoints(nation){
     const r = RESULTS[nation];
     if(!r) return 0;
     return (r.gw||0)*2 + (STAGE_PTS[r.stage] ?? 0);
+  }
+  function nationRecord(nation){
+    const r = RESULTS[nation] || {gw:0,gd:0,gl:0,stage:"group",out:false};
+    const fin = ["fourth","third","runnerup","champion"].includes(r.stage);
+    const done = r.out || fin;
+    return {
+      w:(r.gw||0) + KO_WINS[r.stage],
+      d:(r.gd||0),
+      l:(r.gl||0) + (done ? KO_LOSS[r.stage] : 0),
+      stage:r.stage, out:done && r.stage!=="champion"
+    };
   }
   function flagOf(nation){
     const t = TEAMS[nation];
@@ -1099,8 +1207,9 @@
       return;
     }
     el.innerHTML = '<div class="draft-grid">' + PAIRS.map(p =>
-      '<div class="squad"><div class="squad-head"><span class="s-name">'+p.name+'</span><span class="s-seed">Seed '+p.seed+'</span></div><ul>' +
-      Array.from({length:6}, (_,i) => {
+      '<div class="squad"><div class="squad-head"><span class="s-name">'+p.name+'</span><span class="s-seed">Seed '+p.seed+'</span></div>'+
+      (p.members ? '<div class="squad-members">'+p.members.join(' · ')+'</div>' : '') + '<ul>' +
+      Array.from({length:8}, (_,i) => {
         const n = p.picks[i];
         return n
           ? '<li><span class="pick-no">R'+(i+1)+'</span><span class="flag">'+flagOf(n)+'</span>'+n+'</li>'
@@ -1115,23 +1224,42 @@
       el.innerHTML = comingSoon("Standings go live once squads are drafted and the tournament kicks off");
       return;
     }
-    const rows = PAIRS.map(p => ({
+    const teams = PAIRS.map(p => ({
       name:p.name,
       picks:p.picks.filter(Boolean),
       total:p.picks.filter(Boolean).reduce((s,n)=>s+teamPoints(n),0)
     })).sort((a,b)=>b.total-a.total);
-    el.innerHTML =
+
+    const summary =
       '<div class="board"><div class="board-row head"><span>Pos</span><span>Company Team</span><span style="text-align:right">Points</span></div>' +
-      rows.map((r,i)=>
-        '<div class="board-row"><span class="pos">'+(i+1)+'</span><span class="pair">'+r.name+
-        '<span class="teams-mini">'+r.picks.map(n=>flagOf(n)+' '+teamPoints(n)).join(' · ')+'</span></span>'+
-        '<span class="total">'+r.total+'</span></div>'
-      ).join('') + '</div>' +
-      '<p class="updated-note">Last updated: '+LAST_UPDATED+'</p>';
+      teams.map((t,i)=>'<div class="board-row"><span class="pos">'+(i+1)+'</span><span class="pair">'+t.name+
+        (PAIRS.find(p=>p.name===t.name)?.members ? '<span class="teams-mini">'+PAIRS.find(p=>p.name===t.name).members.join(' · ')+'</span>' : '')+
+        '</span><span class="total">'+t.total+'</span></div>').join('') + '</div>';
+
+    el.innerHTML = summary + '<div class="live-stack">' + teams.map((t,i)=>{
+      const rows = t.picks.map(n=>{
+        const rec = nationRecord(n);
+        const pct = STAGE_FRAC[rec.stage] ?? 6;
+        const isChamp = rec.stage === "champion";
+        const label = (rec.out ? "Out · " : "") + STAGE_LABEL[rec.stage];
+        return '<div class="nation-row'+(rec.out?' out-row':'')+(isChamp?' champ-row':'')+'">'+
+          '<div class="n-name"><span class="flag">'+flagOf(n)+'</span><span class="nm">'+n+'</span></div>'+
+          '<div class="n-rec">'+rec.w+'-'+rec.d+'-'+rec.l+'</div>'+
+          '<div class="n-pts">'+teamPoints(n)+'</div>'+
+          '<div class="prog-wrap"><div class="prog"><div class="prog-fill" style="width:'+pct+'%"></div>'+
+          '<div class="prog-dot" style="left:'+pct+'%"></div></div>'+
+          '<span class="prog-label">'+label+'</span></div></div>';
+      }).join('');
+      return '<div class="live-card"><div class="live-head"><span class="pos">'+(i+1)+'</span>'+
+        '<span class="l-name">'+t.name+'</span>'+
+        '<span class="l-total">'+t.total+'<small>points</small></span></div>'+rows+'</div>';
+    }).join('') + '</div>' +
+    '<p class="rec-key">Record shown as W-D-L · slider tracks tournament progress</p>'+
+    '<p class="updated-note">Last updated: '+LAST_UPDATED+'</p>';
   }
 
   // If hosted (e.g. GitHub Pages), a results.json beside this file overrides the embedded data:
-  // { "lastUpdated":"18 June, 22:00 BST", "results": { "Spain": {"gw":1,"stage":"group"}, ... } }
+  // { "lastUpdated":"18 June, 22:00 BST", "results": { "Spain": {"gw":1,"gd":0,"gl":0,"stage":"group","out":false}, ... } }
   fetch('results.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).then(data => {
     if(data && data.results){
       Object.assign(RESULTS, data.results);
