@@ -5,10 +5,12 @@ on:
     # Every 30 minutes through the daily match window so the board updates
     # at the final whistle of each game. Kick-offs run 16:00-04:00 UTC and
     # extra time + penalties can stretch a match past 2.5 hours.
-    # Runs at :07/:37 rather than :00/:30 — GitHub throttles/drops cron jobs
-    # scheduled on the popular hour marks during busy periods.
-    - cron: "7,37 16-23 * * *"
-    - cron: "7,37 0-7 * * *"
+    # Four ticks an hour at off-peak minutes. GitHub's shared cron scheduler
+    # drops sub-hourly ticks freely under load (observed: 6h of silence),
+    # so we over-provision — even if half are dropped, updates stay ~30-min.
+    # Each run costs one cheap API call, so the redundancy is free.
+    - cron: "7,22,37,52 16-23 * * *"
+    - cron: "7,22,37,52 0-7 * * *"
   workflow_dispatch: {}   # manual "Run workflow" button in the Actions tab
 
 permissions:
