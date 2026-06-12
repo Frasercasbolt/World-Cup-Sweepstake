@@ -233,6 +233,50 @@
     border-top:1px solid rgba(245,248,241,.12); margin-top:.12rem;
   }
 
+  /* ===== "What's new" one-time tour ===== */
+  .wn-card{
+    background:var(--card);
+    border:2px solid var(--amber); border-radius:6px;
+    max-width:460px; width:100%;
+    box-shadow:0 24px 60px rgba(0,0,0,.55);
+    overflow:hidden;
+    animation:goalpop .45s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @media (prefers-reduced-motion: reduce){.wn-card{animation:none}}
+  .wn-head{
+    background:var(--tunnel); padding:1.2rem 1.4rem 1rem;
+    border-bottom:4px solid var(--amber);
+  }
+  .wn-head .wn-kicker{
+    font-family:'Space Mono',monospace; font-size:.62rem;
+    letter-spacing:.3em; text-transform:uppercase; color:var(--amber);
+    display:block; margin-bottom:.35rem;
+  }
+  .wn-head h3{
+    font-family:'Anton',Impact,sans-serif; font-weight:400;
+    font-size:1.5rem; text-transform:uppercase; letter-spacing:.04em;
+    line-height:1.1;
+  }
+  .wn-list{list-style:none; padding:1.1rem 1.3rem .4rem}
+  .wn-list li{
+    display:flex; gap:.8rem; align-items:flex-start;
+    margin-bottom:.95rem; line-height:1.5; font-size:.9rem;
+  }
+  .wn-list .wn-ico{font-size:1.35rem; line-height:1.2; flex-shrink:0}
+  .wn-list strong{color:var(--amber)}
+  .wn-btn{
+    display:block; width:calc(100% - 2.6rem);
+    margin:.4rem auto 1.3rem;
+    appearance:none; border:none; cursor:pointer;
+    background:var(--amber); color:var(--tunnel);
+    font-family:'Anton',Impact,sans-serif; font-size:1.05rem;
+    letter-spacing:.06em; text-transform:uppercase;
+    padding:.75rem 1rem .6rem; border-radius:3px;
+    transition:transform .15s, box-shadow .15s;
+  }
+  .wn-btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,210,63,.35)}
+  .wn-btn:focus-visible{outline:3px solid var(--chalk)}
+
   /* ===== Team nicknames: the headline act (team number stays small) ===== */
   .s-nick, .pair-nick, .l-nick{
     display:block;
@@ -1526,6 +1570,22 @@
 
 <footer>World Cup 2026 · 12 groups · 104 matches · Final at MetLife Stadium, 19 July</footer>
 
+<div class="overlay" id="wn-overlay" role="dialog" aria-modal="true" aria-labelledby="wn-title">
+  <div class="wn-card">
+    <div class="wn-head">
+      <span class="wn-kicker">Team news</span>
+      <h3 id="wn-title">The site's had an upgrade</h3>
+    </div>
+    <ul class="wn-list">
+      <li><span class="wn-ico">⚽</span><div><strong>Matches</strong> — every fixture and live score, plus the knockout bracket that fills itself in. Tap any match to trace its road to the final.</div></li>
+      <li><span class="wn-ico">📋</span><div><strong>Teams</strong> — the six company squads and the eight nations each drafted.</div></li>
+      <li><span class="wn-ico">🏆</span><div><strong>Leaderboard</strong> — the live points table. Updates itself within about half an hour of every final whistle.</div></li>
+      <li><span class="wn-ico">📅</span><div><strong>Calendar</strong> — top right: add the fixtures to Outlook, for all matches or just your team's.</div></li>
+    </ul>
+    <button class="wn-btn" id="wn-btn">Got it — to the matches</button>
+  </div>
+</div>
+
 <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="p-name">
   <div class="profile">
     <div class="profile-head">
@@ -2382,6 +2442,33 @@
   renderScore();
   buildMerged();
   renderMatchCentre();
+
+  /* ===== One-time "what's new" tour =====
+     Shown once per browser (bump the KEY to re-announce future upgrades). */
+  (function(){
+    const KEY = "wc26-whatsnew-v1";
+    let seen = false;
+    try { seen = !!localStorage.getItem(KEY); } catch(e) { seen = true; }
+    if(seen) return;
+    const ov = document.getElementById("wn-overlay");
+    const btn = document.getElementById("wn-btn");
+    function dismiss(){
+      ov.classList.remove("open");
+      try { localStorage.setItem(KEY, "1"); } catch(e){}
+    }
+    btn.addEventListener("click", dismiss);
+    ov.addEventListener("click", e => { if(e.target === ov) dismiss(); });
+    document.addEventListener("keydown", e => {
+      if(e.key === "Escape" && ov.classList.contains("open")) dismiss();
+    });
+    // wait for the splash gate to be passed before popping up
+    const watcher = setInterval(() => {
+      if(!document.body.classList.contains("gate-locked")){
+        clearInterval(watcher);
+        setTimeout(() => { ov.classList.add("open"); btn.focus(); }, 500);
+      }
+    }, 300);
+  })();
 </script>
 
 </body>
