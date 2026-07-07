@@ -1,25 +1,46 @@
 {
-  "lastUpdated": "07 July, 04:05 UTC",
+  "lastUpdated": "07 July, 07:49 UTC",
   "results": {
-    "Senegal": {
-      "gw": 1,
+    "Argentina": {
+      "gw": 3,
       "gd": 0,
-      "gl": 2,
-      "stage": "r32",
-      "out": true
+      "gl": 0,
+      "stage": "r16",
+      "out": false
     },
-    "Curaçao": {
+    "Uruguay": {
       "gw": 0,
-      "gd": 1,
-      "gl": 2,
+      "gd": 2,
+      "gl": 1,
       "stage": "group",
       "out": true
     },
-    "Algeria": {
+    "Cape Verde": {
+      "gw": 0,
+      "gd": 3,
+      "gl": 0,
+      "stage": "r32",
+      "out": true
+    },
+    "England": {
+      "gw": 2,
+      "gd": 1,
+      "gl": 0,
+      "stage": "qf",
+      "out": false
+    },
+    "South Africa": {
       "gw": 1,
       "gd": 1,
       "gl": 1,
       "stage": "r32",
+      "out": true
+    },
+    "Portugal": {
+      "gw": 1,
+      "gd": 2,
+      "gl": 0,
+      "stage": "r16",
       "out": true
     },
     "Colombia": {
@@ -28,76 +49,6 @@
       "gl": 0,
       "stage": "r16",
       "out": false
-    },
-    "Switzerland": {
-      "gw": 2,
-      "gd": 1,
-      "gl": 0,
-      "stage": "r16",
-      "out": false
-    },
-    "Jordan": {
-      "gw": 0,
-      "gd": 0,
-      "gl": 3,
-      "stage": "group",
-      "out": true
-    },
-    "Iraq": {
-      "gw": 0,
-      "gd": 0,
-      "gl": 3,
-      "stage": "group",
-      "out": true
-    },
-    "Netherlands": {
-      "gw": 2,
-      "gd": 1,
-      "gl": 0,
-      "stage": "r32",
-      "out": true
-    },
-    "Qatar": {
-      "gw": 0,
-      "gd": 1,
-      "gl": 2,
-      "stage": "group",
-      "out": true
-    },
-    "Panama": {
-      "gw": 0,
-      "gd": 0,
-      "gl": 3,
-      "stage": "group",
-      "out": true
-    },
-    "Argentina": {
-      "gw": 3,
-      "gd": 0,
-      "gl": 0,
-      "stage": "r16",
-      "out": false
-    },
-    "Germany": {
-      "gw": 2,
-      "gd": 0,
-      "gl": 1,
-      "stage": "r32",
-      "out": true
-    },
-    "Ghana": {
-      "gw": 1,
-      "gd": 1,
-      "gl": 1,
-      "stage": "r32",
-      "out": true
-    },
-    "Croatia": {
-      "gw": 2,
-      "gd": 0,
-      "gl": 1,
-      "stage": "r32",
-      "out": true
     },
     "Scotland": {
       "gw": 1,
@@ -113,25 +64,18 @@
       "stage": "r16",
       "out": false
     },
-    "Sweden": {
-      "gw": 1,
+    "Spain": {
+      "gw": 2,
       "gd": 1,
+      "gl": 0,
+      "stage": "qf",
+      "out": false
+    },
+    "Côte d'Ivoire": {
+      "gw": 2,
+      "gd": 0,
       "gl": 1,
       "stage": "r32",
-      "out": true
-    },
-    "South Korea": {
-      "gw": 1,
-      "gd": 0,
-      "gl": 2,
-      "stage": "group",
-      "out": true
-    },
-    "Paraguay": {
-      "gw": 1,
-      "gd": 1,
-      "gl": 1,
-      "stage": "r16",
       "out": true
     },
     "Ecuador": {
@@ -141,19 +85,61 @@
       "stage": "r32",
       "out": true
     },
-    "Haiti": {
-      "gw": 0,
+    "Mexico": {
+      "gw": 3,
       "gd": 0,
-      "gl": 3,
-      "stage": "group",
+      "gl": 0,
+      "stage": "r16",
       "out": true
     },
-    "Belgium": {
+    "Algeria": {
       "gw": 1,
-      "gd": 2,
+      "gd": 1,
+      "gl": 1,
+      "stage": "r32",
+      "out": true
+    },
+    "Germany": {
+      "gw": 2,
+      "gd": 0,
+      "gl": 1,
+      "stage": "r32",
+      "out": true
+    },
+    "Ghana": {
+      "gw": 1,
+      "gd": 1,
+      "gl": 1,
+      "stage": "r32",
+      "out": true
+    },
+    "Netherlands": {
+      "gw": 2,
+      "gd": 1,
       "gl": 0,
-      "stage": "qf",
-      "out": false
+      "stage": "r32",
+      "out": true
+    },
+    "Canada": {
+      "gw": 1,
+      "gd": 1,
+      "gl": 1,
+      "stage": "r16",
+      "out": true
+    },
+    "Croatia": {
+      "gw": 2,
+      "gd": 0,
+      "gl": 1,
+      "stage": "r32",
+      "out": true
+    },
+    "Saudi Arabia": {
+      "gw": 0,
+      "gd": 2,
+      "gl": 1,
+      "stage": "group",
+      "out": true
     },
     "Czechia": {
       "gw": 0,
@@ -162,18 +148,53 @@
       "stage": "group",
       "out": true
     },
-    "Côte d'Ivoire": {
+    "South Korea": {
+      "gw": 1,
+      "gd": 0,
+      "gl": 2,
+      "stage": "group",
+      "out": true
+    },
+    "Morocco": {
+      "gw": 2,
+      "gd": 1,
+      "gl": 0,
+      "stage": "qf",
+      "out": false
+    },
+    "Türkiye": {
+      "gw": 1,
+      "gd": 0,
+      "gl": 2,
+      "stage": "group",
+      "out": true
+    },
+    "Norway": {
       "gw": 2,
       "gd": 0,
       "gl": 1,
-      "stage": "r32",
+      "stage": "qf",
+      "out": false
+    },
+    "Panama": {
+      "gw": 0,
+      "gd": 0,
+      "gl": 3,
+      "stage": "group",
       "out": true
     },
-    "Portugal": {
+    "United States": {
+      "gw": 2,
+      "gd": 0,
+      "gl": 1,
+      "stage": "r16",
+      "out": true
+    },
+    "Japan": {
       "gw": 1,
       "gd": 2,
       "gl": 0,
-      "stage": "r16",
+      "stage": "r32",
       "out": true
     },
     "Australia": {
@@ -183,17 +204,45 @@
       "stage": "r32",
       "out": true
     },
-    "France": {
-      "gw": 3,
-      "gd": 0,
-      "gl": 0,
-      "stage": "qf",
-      "out": false
-    },
-    "Austria": {
+    "DR Congo": {
       "gw": 1,
       "gd": 1,
       "gl": 1,
+      "stage": "r32",
+      "out": true
+    },
+    "Curaçao": {
+      "gw": 0,
+      "gd": 1,
+      "gl": 2,
+      "stage": "group",
+      "out": true
+    },
+    "Iraq": {
+      "gw": 0,
+      "gd": 0,
+      "gl": 3,
+      "stage": "group",
+      "out": true
+    },
+    "Jordan": {
+      "gw": 0,
+      "gd": 0,
+      "gl": 3,
+      "stage": "group",
+      "out": true
+    },
+    "Switzerland": {
+      "gw": 2,
+      "gd": 1,
+      "gl": 0,
+      "stage": "r16",
+      "out": false
+    },
+    "Senegal": {
+      "gw": 1,
+      "gd": 0,
+      "gl": 2,
       "stage": "r32",
       "out": true
     },
@@ -211,26 +260,19 @@
       "stage": "group",
       "out": true
     },
-    "Bosnia & Herzegovina": {
+    "Sweden": {
       "gw": 1,
       "gd": 1,
       "gl": 1,
       "stage": "r32",
       "out": true
     },
-    "Canada": {
+    "Belgium": {
       "gw": 1,
-      "gd": 1,
-      "gl": 1,
-      "stage": "r16",
-      "out": true
-    },
-    "United States": {
-      "gw": 2,
-      "gd": 0,
-      "gl": 1,
-      "stage": "r16",
-      "out": true
+      "gd": 2,
+      "gl": 0,
+      "stage": "qf",
+      "out": false
     },
     "Tunisia": {
       "gw": 0,
@@ -239,61 +281,26 @@
       "stage": "group",
       "out": true
     },
-    "Norway": {
-      "gw": 2,
-      "gd": 0,
-      "gl": 1,
-      "stage": "qf",
-      "out": false
-    },
-    "Türkiye": {
-      "gw": 1,
-      "gd": 0,
-      "gl": 2,
-      "stage": "group",
-      "out": true
-    },
-    "Japan": {
-      "gw": 1,
-      "gd": 2,
-      "gl": 0,
-      "stage": "r32",
-      "out": true
-    },
-    "Saudi Arabia": {
-      "gw": 0,
-      "gd": 2,
-      "gl": 1,
-      "stage": "group",
-      "out": true
-    },
-    "South Africa": {
+    "Bosnia & Herzegovina": {
       "gw": 1,
       "gd": 1,
       "gl": 1,
       "stage": "r32",
       "out": true
     },
-    "DR Congo": {
+    "Paraguay": {
+      "gw": 1,
+      "gd": 1,
+      "gl": 1,
+      "stage": "r16",
+      "out": true
+    },
+    "Austria": {
       "gw": 1,
       "gd": 1,
       "gl": 1,
       "stage": "r32",
       "out": true
-    },
-    "Spain": {
-      "gw": 2,
-      "gd": 1,
-      "gl": 0,
-      "stage": "qf",
-      "out": false
-    },
-    "England": {
-      "gw": 2,
-      "gd": 1,
-      "gl": 0,
-      "stage": "qf",
-      "out": false
     },
     "Uzbekistan": {
       "gw": 0,
@@ -302,13 +309,6 @@
       "stage": "group",
       "out": true
     },
-    "Morocco": {
-      "gw": 2,
-      "gd": 1,
-      "gl": 0,
-      "stage": "qf",
-      "out": false
-    },
     "Iran": {
       "gw": 0,
       "gd": 3,
@@ -316,25 +316,25 @@
       "stage": "group",
       "out": true
     },
-    "Uruguay": {
-      "gw": 0,
-      "gd": 2,
-      "gl": 1,
-      "stage": "group",
-      "out": true
-    },
-    "Mexico": {
+    "France": {
       "gw": 3,
       "gd": 0,
       "gl": 0,
-      "stage": "r16",
+      "stage": "qf",
+      "out": false
+    },
+    "Qatar": {
+      "gw": 0,
+      "gd": 1,
+      "gl": 2,
+      "stage": "group",
       "out": true
     },
-    "Cape Verde": {
+    "Haiti": {
       "gw": 0,
-      "gd": 3,
-      "gl": 0,
-      "stage": "r32",
+      "gd": 0,
+      "gl": 3,
+      "stage": "group",
       "out": true
     }
   },
@@ -1373,8 +1373,8 @@
       "st": "qf",
       "utc": "2026-07-10T19:00:00Z",
       "status": "TIMED",
-      "h": null,
-      "a": null,
+      "h": "Spain",
+      "a": "Belgium",
       "hs": null,
       "as": null
     },
